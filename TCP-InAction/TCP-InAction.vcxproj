@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{7940aa5c-2133-44c2-a8ff-ed6ef50c6631}</ProjectGuid>
-    <RootNamespace>ClientOC</RootNamespace>
+    <ProjectGuid>{2a0269c4-89ae-4a6e-bcb5-e82697cddfd4}</ProjectGuid>
+    <RootNamespace>TCPInAction</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -70,14 +70,6 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\Shiny#\OneDrive\Documents\GitHub\TCP-Chat-OC\TCP-Chat-OC\MessagesOC;D:\Develop\libraries\C++\boost_1_78_0;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Shiny#\OneDrive\Documents\GitHub\TCP-Chat-OC\TCP-Chat-OC\MessagesOC;D:\Develop\libraries\C++\boost_1_78_0\stage;$(LibraryPath)</LibraryPath>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\Shiny#\OneDrive\Documents\GitHub\TCP-Chat-OC\TCP-Chat-OC\MessagesOC;D:\Develop\libraries\C++\boost_1_78_0;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Shiny#\OneDrive\Documents\GitHub\TCP-Chat-OC\TCP-Chat-OC\MessagesOC;D:\Develop\libraries\C++\boost_1_78_0\stage;$(LibraryPath)</LibraryPath>
-  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -112,13 +104,10 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../MessagesOC;D:\Develop\libraries\C++\boost_1_78_0\stage;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalModuleDependencies>../MessagesOC;%(AdditionalModuleDependencies)</AdditionalModuleDependencies>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -129,28 +118,28 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../MessagesOC;D:\Develop\libraries\C++\boost_1_78_0\stage;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalModuleDependencies>../MessagesOC;%(AdditionalModuleDependencies)</AdditionalModuleDependencies>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ChatClient.cpp" />
-    <ClCompile Include="Client-OC.cpp" />
+    <ClCompile Include="Session.cpp" />
+    <ClCompile Include="TCP-InAction.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ChatClient.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MessagesOC\MessagesOC.vcxproj">
-      <Project>{c287d6b1-ff55-4087-a0e8-02c960f5f28a}</Project>
+    <ProjectReference Include="..\Client-OC\Client-OC.vcxproj">
+      <Project>{7940aa5c-2133-44c2-a8ff-ed6ef50c6631}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\Server-OC\Server-OC.vcxproj">
+      <Project>{e1022187-7d6b-4675-8797-8958908d8074}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Session.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

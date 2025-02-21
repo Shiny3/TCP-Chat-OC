@@ -12,7 +12,7 @@
 
 using boost::asio::ip::tcp;
 
-class CharServer
+class ChatServer
 {
 
 private:

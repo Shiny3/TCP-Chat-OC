@@ -1,20 +1,11 @@
-// Client-OC.cpp : This file contains the 'main' function. Program execution begins and ends there.
+// TCP-InAction.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
 #include <iostream>
-#include "ChatServer.h"
 
-int main(int argc, char* argv[]) {
-    ChatServer *chatServer = new ChatServer();
-    if (argc != 2) {
-        std::cerr << "Usage: chat_server <port>" << std::endl;
-        return 1;
-    }
-
-    std::string port = "12345";// argv[1];
-   chatServer->start_server(port);
-
-    return 0;
+int main()
+{
+    std::cout << "Hello World!\n";
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

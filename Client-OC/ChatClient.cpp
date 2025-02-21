@@ -4,7 +4,8 @@
 #include <iostream>
 #include <thread>
 #include <boost/asio.hpp>
-
+ 
+#include "ClientMessage.h"
 
 void ChatClient::receive_messages(std::shared_ptr<tcp::socket> socket) {
 
@@ -33,10 +34,13 @@ void ChatClient::receive_messages(std::shared_ptr<tcp::socket> socket) {
 void ChatClient::send_messages(std::shared_ptr<tcp::socket> socket) {
 
     try {
+        ClientMessage* cl_message = new ClientMessage();
 
         std::string message;
         while (true) {
-            std::getline(std::cin, message);
+
+            cl_message->readSingleFromConsole();
+           // std::getline(std::cin, message);
             boost::asio::write(*socket, boost::asio::buffer(message));
         }
     }
@@ -44,5 +48,8 @@ void ChatClient::send_messages(std::shared_ptr<tcp::socket> socket) {
 
         std::cerr << "Exception: " << e.what() << std::endl;
     }
+
 };
+
+
 

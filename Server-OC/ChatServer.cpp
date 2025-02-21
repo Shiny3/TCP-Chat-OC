@@ -8,7 +8,7 @@
 
 using boost::asio::ip::tcp;
 
-void CharServer::broadcast_message(const std::string& message, std::shared_ptr<tcp::socket> sender_socket) {
+void ChatServer::broadcast_message(const std::string& message, std::shared_ptr<tcp::socket> sender_socket) {
 
     std::lock_guard<std::mutex> lock(clients_mutex);
 
@@ -20,7 +20,7 @@ void CharServer::broadcast_message(const std::string& message, std::shared_ptr<t
     }
 }
 
-void CharServer::handle_client(std::shared_ptr<tcp::socket> client_socket) {
+void ChatServer::handle_client(std::shared_ptr<tcp::socket> client_socket) {
 
     try {
 
@@ -58,7 +58,7 @@ void CharServer::handle_client(std::shared_ptr<tcp::socket> client_socket) {
     std::cout << "A client has left the room." << std::endl;
 }
 
-void CharServer::start_server(const std::string& port) {
+void ChatServer::start_server(const std::string& port) {
 
     try {
 
@@ -81,7 +81,7 @@ void CharServer::start_server(const std::string& port) {
             std::cout << "A new client connected." << std::endl;
 
             // Handle client communication in a new thread
-           std::thread th(&CharServer::handle_client, this, client_socket); 
+           std::thread th(&ChatServer::handle_client, this, client_socket); 
            th.detach();
         }
     }
