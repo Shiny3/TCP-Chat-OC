@@ -1,10 +1,12 @@
 # Exclude the entire folder
-C:\Users\Shiny#\OneDrive\Documents\GitHub\TCP-Chat-OC\TCP-Chat-OC\Client-OC\Client-OC
-C:\Users\Shiny#\OneDrive\Documents\GitHub\TCP-Chat-OC\TCP-Chat-OC\Client-OC\x64
-C:\Users\Shiny#\OneDrive\Documents\GitHub\TCP-Chat-OC\TCP-Chat-OC\Client-OC\.vs
-C:\Users\Shiny#\OneDrive\Documents\GitHub\TCP-Chat-OC\TCP-Chat-OC\Server-OC\x64
-C:\Users\Shiny#\OneDrive\Documents\GitHub\TCP-Chat-OC\TCP-Chat-OC\TCP-InAction\x64
-C:\Users\Shiny#\OneDrive\Documents\GitHub\TCP-Chat-OC\TCP-Chat-OC\ValidatorOC\x64
+Client-OC\Client-OC
+Client-OC\x64
+Client-OC\.vs
+Server-OC\x64
+TCP-InAction\x64
+ValidatorOC\x64
+.vs\TCP-Chat-OC
+MessagesOC\x64
 
 # Exclude a specific file
  
