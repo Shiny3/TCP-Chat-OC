@@ -28,23 +28,6 @@ set port=12345
 REM Replace "yourCommand" with the command you want to run
 start "" "%CLIENT_FULL_PATH%" "%name%" "%host%" "%port%"
 
-REM echo Client started on  %name% %host%:%port%.
-
-set name2=client 2
-set host2=127.0.0.1
-set port2=12345
-
-REM Replace "yourCommand" with the command you want to run
-start "" "%CLIENT_FULL_PATH%" "%name%" "%host%" "%port%"
-
-REM echo Client started on  %name2% %host2%:%port2%.
-
-set name3=client 3
-set host3=127.0.0.1
-set port3=12345
-
-REM Replace "yourCommand" with the command you want to run
-start "" "%CLIENT_FULL_PATH%" "%name3%" "%host3%" "%port3%"
 
 REM echo Client started on  %name3% %host3%:%port3%.
 

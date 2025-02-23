@@ -143,9 +143,12 @@
   <ItemGroup>
     <ClCompile Include="ChatClient.cpp" />
     <ClCompile Include="Client-OC.cpp" />
+    <ClCompile Include="server_pool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ChatClient.h" />
+    <ClInclude Include="ClientHandler.h" />
+    <ClInclude Include="server_pool.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MessagesOC\MessagesOC.vcxproj">

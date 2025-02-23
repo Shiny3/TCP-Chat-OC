@@ -9,47 +9,59 @@
 
 int main(int argc, char* argv[]) {
 
-    if (argc != 3) {
-        std::cerr << "Usage: chat_client <server> <port>" << std::endl;
-        return 1;
-    }
-
-    ChatClient *chatClient = new ChatClient();
-
-    std::string server = argv[1];
-    std::string port = argv[2];
+    std::string IPAddress;
+    std::string port;
+    std::string name;
 
     try {
+        if (argc != 4) throw;
+        name = std::string(argv[1]);
+        IPAddress = std::string(argv[2]);
+        port = std::string(argv[3]);
+        
+    }
+    catch (...) {
+        std::cout << "Incorrect Format" << std::endl;
+        std::cout << "Usage: <Client> <Server-IPAddress> <Server-Port>" << std::endl;
+        return 0;
+    }
+
+    try {
+        // Set up Boost.Asio io_context and thread pool
         boost::asio::io_context io_context;
-        tcp::resolver resolver(io_context);
-        auto endpoints = resolver.resolve(server, port);
-        tcp::socket socket(io_context);
-        boost::asio::connect(socket, endpoints);
 
-        std::cout << "Connected to the server." << std::endl;
+       // Create a thread pool with 4 threads
+        auto thread_pool = std::make_shared<ThreadPool777>(4);
 
-        // Start receiving messages in a separate thread
-        std::thread th(&ChatClient::receive_messages, chatClient, std::make_shared<tcp::socket>(std::move(socket)));
+        // Start the thread pool to handle the io_context in multiple threads
+        thread_pool->run();
 
-        th.detach();
+       // ChatClient* client_handler = new ChatClient(name, io_context, IPAddress, port, thread_pool);
+        auto client_handler = std::make_shared<ChatClient>(name,io_context, IPAddress, port, thread_pool);
 
-        // Start sending messages
-        chatClient->send_messages(std::make_shared<tcp::socket>(std::move(socket)));
+        // //client_handler->connect();
+       client_handler->start();
+
+       // Accept incoming connections and handle each client with a ClientHandler
+        while (true) {
+
+          // Start sending messages
+          
+          /**/
+          client_handler->send_messages();
+          client_handler->join();
+         /*
+           client_handler->start_pool();
+           client_handler->send_messages(); */
+        }
+
+        // Stop the thread pool and io_context when done (this will never be reached in this loop)
+        thread_pool->stop();
+        io_context.stop(); /*  */ 
     }
     catch (const std::exception& e) {
-        std::cerr << "Exception: " << e.what() << std::endl;
+        std::cerr << "Server error: " << e.what() << std::endl;
     }
 
     return 0;
-}
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+};
