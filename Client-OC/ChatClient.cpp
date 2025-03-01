@@ -68,9 +68,6 @@ void ChatClient::connect() {
             cl_message->readSingleFromConsole();
             message = cl_message->getContent();
 
-            /*TODO: remove connection*/
-            if (message == "exit")
-                return false;
 
             boost::system::error_code ec;
            
@@ -85,10 +82,29 @@ void ChatClient::connect() {
                 /*//comment message_to_server(message);*/
               
 
-               std::string encrypted_msg = Cipher::encrypt(message);
-               size_t bytes_written = (*socket_).write_some(boost::asio::buffer(encrypted_msg), ec);
+               //std::string encrypted_msg = Cipher::encrypt(message);
+               //size_t bytes_written = (*socket_).write_some(boost::asio::buffer(encrypted_msg), ec);
+
+               size_t bytes_written = (*socket_).write_some(boost::asio::buffer(message), ec);
                if (ec) throw;
                 
+               /*TODO: remove connection*/
+               if (message == "exit")
+               {
+                   std::cout << "Client Requested to Exit.\n";
+                   stop();
+                   std::cout << "The Client Window Will Close In 5 Seconds..." << std::endl;
+                   Sleep(5000);
+
+                   HWND hwnd = GetConsoleWindow(); // Get a handle to the console window
+                   if (hwnd != nullptr)
+                   {
+                       PostMessage(hwnd, WM_CLOSE, 0, 0); // Post a WM_CLOSE message to the console window
+                   }
+                   break;
+                   
+               }
+
                // boost::asio::write(socket_, boost::asio::buffer(encrypted_msg + "#"));
                 
                 //std::cout << "Message sent. " << std::endl;
@@ -136,8 +152,9 @@ void ChatClient::receive_messages() {
 
             if (length > 0) {
                 // Decrypt message (for validation)
-                std::string decrypted_msg = Cipher::decrypt(std::string(data, length));
-                std::cout << "Received from server: " << decrypted_msg << std::endl;
+                //std::string decrypted_msg = Cipher::decrypt(std::string(data, length));
+                //std::cout << "Received from server: " << decrypted_msg << std::endl;
+                std::cout << "Received from server: " << data << std::endl;
             }
         }
     }

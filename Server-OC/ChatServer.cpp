@@ -82,7 +82,7 @@ void ChatServer::handle_client(std::shared_ptr<tcp::socket> client_socket) {
 
             size_t length = client_socket->read_some(boost::asio::buffer(data), error);
             if (error) {
-                std::cerr << "Reading failed..." << std::endl;
+                //std::cerr << "Reading failed..." << std::endl;
                 break;
             }
 
@@ -90,6 +90,13 @@ void ChatServer::handle_client(std::shared_ptr<tcp::socket> client_socket) {
 
                 std::string message(data, length);
                 std::cout << "Received: " << message << std::endl;
+
+                /*TODO: remove connection*/
+                if (message == "exit")
+                {
+                    break;
+                }
+
 
                 // Broadcast message to all clients except the sender
                 broadcast_message(message, client_socket);
@@ -168,7 +175,7 @@ void ChatServer::remove_client(std::shared_ptr<tcp::socket> client_socket) {
     std::remove does not actually remove elements from the container; instead, it reorders the elements in the range such that
     the elements to be removed are moved to the end of the range.
     */
-    std::cout << "Client Disconnected." << std::endl;
+    //std::cout << "Client Disconnected." << std::endl;
 
     std::lock_guard<std::mutex> lock(clients_mutex);
     auto it = std::find(clients_.begin(), clients_.end(), client_socket);
