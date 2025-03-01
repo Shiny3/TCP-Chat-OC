@@ -27,40 +27,38 @@ class ChatClient : BaseClientServer
 
     std::shared_ptr<boost::asio::ip::tcp::socket > socket_;
 
-    std::shared_ptr<ThreadPool777> thread_pool_;
-
     std::string name_;
 
     bool is_running_;
 
     void close_window();
 
-public:
-
-  //  void send_message(const std::string& msg);
-
-    void connect();
-
+ 
     void stop();
 
     void run();
 
-    void join();
-
     //***********************//
-    void start();
 
     void receive_messages();
 
-    bool send_messages();
+    void message_to_server(const std::string& message);
 
-    ChatClient(const std::string& name, boost::asio::io_context& io_context, const std::string& host, const std::string& port, std::shared_ptr<ThreadPool777> thread_pool);
+
+public:
+
+    ChatClient(const std::string& name, boost::asio::io_context& io_context, const std::string& host, const std::string& port);
 
     std::shared_ptr<std::thread> communication_thread;
 
-    void start_pool();
+    bool send_messages();
 
-    void message_to_server(const std::string& message);
+    void start();
+
+    void join();
+    
+    void connect();
+
 };
 
 #endif

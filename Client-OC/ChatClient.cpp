@@ -1,54 +1,10 @@
 #include "ChatClient.h"
 #include "../ShareItemsProject/Cypher.h"
 
-void ChatClient::start_pool() {
-    try {
-        //std::shared_ptr<ThreadPool777> thread_pool_;
-        if (thread_pool_) {
-            // Safe to use thread_pool_ here
-            thread_pool_->post([this]() { run(); });
-        }
-        else {
-            throw;
-            // Handle error, thread_pool_ is null
-            receive_messages();
-        }
-    }
-    catch (const std::exception& e) {
-        std::cerr << "Error ThreadPool777 is not created: " << e.what() << std::endl;
-        return;  // Handle error appropriately
-    }
-};
-
-ChatClient::ChatClient(const std::string& name, boost::asio::io_context& io_context, const std::string& host, const std::string& port, std::shared_ptr<ThreadPool777> thread_pool)
-   :
-    name_(name), 
-    io_context_(io_context), 
-    socket_(std::make_shared<tcp::socket>(io_context_)), 
-    resolver_(io_context), 
-    ip_(host), 
-    port_(port),
-    thread_pool_(thread_pool)
-{
-    connect();
-};
-
-void ChatClient::connect() {
-
-    try {
-        // Connect the socket
-        boost::asio::connect(*socket_, resolver_.resolve(ip_, port_));
-        std::cout<<name_ << " Connected Successfully!" << std::endl;
-    }
-    catch (const std::exception& e) {
-        std::cerr << name_ << " Connected Failed. " << e.what() << std::endl;
-        return;  // Handle error appropriately
-    }
-};
-
 
 // Send a message to the server
-/**/bool ChatClient::send_messages() {
+/**/
+bool ChatClient::send_messages() {
 
     try {
 
@@ -88,7 +44,6 @@ void ChatClient::connect() {
                size_t bytes_written = (*socket_).write_some(boost::asio::buffer(message), ec);
                if (ec) throw;
                 
-               /*TODO: remove connection*/
                if (message == "exit")
                {
                    close_window();
@@ -155,7 +110,7 @@ void ChatClient::receive_messages() {
                 // Decrypt message (for validation)
                 //std::string decrypted_msg = Cipher::decrypt(std::string(data, length));
                 //std::cout << "Received from server: " << decrypted_msg << std::endl;
-                std::cout << "Received from server: " << data << std::endl;
+                std::cout << "Received from server: " << std::string(data, length) << std::endl;
             }
         }
     }
@@ -166,57 +121,12 @@ void ChatClient::receive_messages() {
 
 };
 
-
-/**/
-void ChatClient::run() {
-    try {
-        char data[1024];
-        while (is_running_) {
-
-            boost::asio::streambuf buf;
-            boost::system::error_code error;
-
-          //  std::make_shared<tcp::socket>(std::move(socket_));
-            size_t length = (*socket_).read_some(boost::asio::buffer(data), error);
-
-           //boost::asio::read_until(socket_, buf, "#", error);
-          // std::istream input(&buf);
-          // std::getline(input, message_); 
-           if (error && error != boost::asio::error::eof) {
-                std::cerr << "Error reading received message from socket: " << error.message() << std::endl;
-                return;
-            }
-            else if (length>0) {
-                // Validate message
-                if (data == "exit") {
-                    std::cout << "Client requested to exit\n";
-                    stop();
-                }
-                else {
-                    // Encrypt message
-                    std::string encrypted_msg = Cipher::encrypt(data);
-                    std::cout << "Encrypted message: " << encrypted_msg << std::endl;
-
-                    // Decrypt message (for validation)
-                    std::string decrypted_msg = Cipher::decrypt(encrypted_msg);
-                    std::cout << "Decrypted message: " << decrypted_msg << std::endl;
-
-                    // Send response to client
-                    send_messages();
-                }
-            }
-        }
-    }
-    catch (std::exception& e) {
-        std::cerr << "Error in client communication: " << e.what() << std::endl;
-    }
-}
-
  
 void ChatClient::stop() {
     is_running_ = false;
    (*socket_).close();
 }
+
 /*
 Start the communication thread and return a shared pointer to the thread
 */ 
@@ -227,11 +137,15 @@ void ChatClient::start() {
 
 // Join the communication thread
 void  ChatClient::join() {
-   /**/ if (communication_thread && communication_thread->joinable()) {
+    if (communication_thread && communication_thread->joinable()) {
         communication_thread->join();
     }
 }
-/**/
+
+
+/*
+TODO:
+*/
 void ChatClient::message_to_server(const std::string& message)
 {
     // Create a sample message to send
@@ -241,3 +155,28 @@ void ChatClient::message_to_server(const std::string& message)
 
     std::cout << "Message sent to the server." << std::endl;
 }
+
+ChatClient::ChatClient(const std::string& name, boost::asio::io_context& io_context, const std::string& host, const std::string& port)
+    :
+    name_(name),
+    io_context_(io_context),
+    socket_(std::make_shared<tcp::socket>(io_context_)),
+    resolver_(io_context),
+    ip_(host),
+    port_(port)
+{
+    connect();
+};
+
+void ChatClient::connect() {
+
+    try {
+        // Connect the socket
+        boost::asio::connect(*socket_, resolver_.resolve(ip_, port_));
+        std::cout << name_ << " Connected Successfully!" << std::endl;
+    }
+    catch (const std::exception& e) {
+        std::cerr << name_ << " Connected Failed. " << e.what() << std::endl;
+        return;  // Handle error appropriately
+    }
+};

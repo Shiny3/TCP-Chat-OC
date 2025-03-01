@@ -127,6 +127,10 @@ void ChatServer::broadcast_message(const std::string& message, std::shared_ptr<t
 
             // Create a sample message to send
             boost::system::error_code error;
+
+            //size_t bytes_written = (*client).write_some(boost::asio::buffer(message), error);
+            //if (error) throw;
+
             size_t bytes_written = boost::asio::write(*client, boost::asio::buffer(message), error);
             if (!error) {
                 std::cout << "Sent to a client." << bytes_written << std::endl;
