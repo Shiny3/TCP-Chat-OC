@@ -15,9 +15,11 @@
     <ProjectCapability Include="SourceItemsFromImports" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)BaseClientServer.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)ThreadPool.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="$(MSBuildThisFileDirectory)BaseClientServer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Cypher.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)ThreadPool.h" />
   </ItemGroup>

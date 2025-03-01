@@ -9,11 +9,13 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)ThreadPool.cpp">
       <Filter>ThreadPool</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)BaseClientServer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)ThreadPool.h">
       <Filter>ThreadPool</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)Cypher.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)BaseClientServer.h" />
   </ItemGroup>
 </Project>

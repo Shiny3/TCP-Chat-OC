@@ -29,8 +29,5 @@
     <ClInclude Include="ChatClient.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\OneDrive\Documents\GitHub\TCP-Chat-OC\TCP-Chat-OC\Client-OC\ChatClient.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

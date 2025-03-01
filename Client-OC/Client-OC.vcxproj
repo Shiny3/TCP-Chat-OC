@@ -146,7 +146,6 @@
     <ClCompile Include="Client-OC.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\OneDrive\Documents\GitHub\TCP-Chat-OC\TCP-Chat-OC\Client-OC\ChatClient.h" />
     <ClInclude Include="ChatClient.h" />
   </ItemGroup>
   <ItemGroup>

@@ -6,18 +6,14 @@
 #include <iostream>
 #include <thread>
 #include <boost/asio.hpp>
-#include "../ShareItemsProject/ThreadPool.h"
-
-#include <iostream>
-
-#include <boost/asio.hpp>
 #include <boost/lexical_cast.hpp>
 #include "ClientMessage.h"
 #include "../ShareItemsProject/ThreadPool.h"
+#include <BaseClientServer.h>
 
 using boost::asio::ip::tcp;
 
-class ChatClient
+class ChatClient : BaseClientServer
 {
     boost::asio::io_context& io_context_;  
 
@@ -61,6 +57,8 @@ public:
     std::shared_ptr<std::thread> communication_thread;
 
     void start_pool();
+
+    void message_to_server(const std::string& message);
 };
 
 #endif

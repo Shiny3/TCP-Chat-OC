@@ -38,10 +38,10 @@ void ChatClient::connect() {
     try {
         // Connect the socket
         boost::asio::connect(*socket_, resolver_.resolve(ip_, port_));
-        std::cout << "Connected to the server!" << std::endl;
+        std::cout<<name_ << " Connected Successfully!" << std::endl;
     }
     catch (const std::exception& e) {
-        std::cerr << "Error during connection: " << e.what() << std::endl;
+        std::cerr << name_ << " Connected Failed. " << e.what() << std::endl;
         return;  // Handle error appropriately
     }
 };
@@ -80,7 +80,12 @@ void ChatClient::connect() {
 
                 //Use write_some for non - blocking or asynchronous writes where you want to write as much data as possible immediately.
                 // Send the message using write_some
-                std::string encrypted_msg = Cipher::encrypt(message);
+
+                /* BaseClientServer::send_message(*socket_, message);*/ 
+                /*//comment message_to_server(message);*/
+              
+
+               std::string encrypted_msg = Cipher::encrypt(message);
                size_t bytes_written = (*socket_).write_some(boost::asio::buffer(encrypted_msg), ec);
                if (ec) throw;
                 
@@ -114,7 +119,14 @@ void ChatClient::receive_messages() {
         char data[1024];
         while (true) {
 
-            boost::system::error_code error;
+           // std::string message;
+           //   message = BaseClientServer::receive_message(*socket_);
+         
+            /* MessageLP lp_message = read_message(*socket_);
+
+            std::cout << "Received from server: " << lp_message.to_string() << std::endl; */
+
+           boost::system::error_code error;
             size_t length = (*socket_).read_some(boost::asio::buffer(data), error);
 
             if (error) {
@@ -126,7 +138,7 @@ void ChatClient::receive_messages() {
                 // Decrypt message (for validation)
                 std::string decrypted_msg = Cipher::decrypt(std::string(data, length));
                 std::cout << "Received from server: " << decrypted_msg << std::endl;
-            }        
+            }
         }
     }
     catch (const std::exception& e) {
@@ -201,4 +213,13 @@ void  ChatClient::join() {
         communication_thread->join();
     }
 }
+/**/
+void ChatClient::message_to_server(const std::string& message)
+{
+    // Create a sample message to send
+     MessageLP *lp_message = new MessageLP(message, name_);   
+    // Send the message to the server
+   BaseClientServer::write_message(*socket_, *lp_message);
 
+    std::cout << "Message sent to the server." << std::endl;
+}

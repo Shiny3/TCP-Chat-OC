@@ -19,70 +19,23 @@ class ThreadPool777 {
 
 public:
 
-    ThreadPool777(size_t num_threads) :num_threads_(num_threads) , io_context_(num_threads), work_guard_(boost::asio::make_work_guard(io_context_)) {
-        run();
-    }
+    ThreadPool777(size_t num_threads);
 
-    // Post a task to the thread pool
-    template <typename F>
-    void post(F&& f) {
-        boost::asio::post(io_context_, std::forward<F>(f));
-    }
+    void run();
 
-    void run() {
-        for (size_t i = 0; i < num_threads_; ++i) {
-            threads_.emplace_back([this]() {
-                worker(); 
-                //boost::asio::io_context::work work(io_context_);
-                io_context_.run();
-                });
-        }
-    }
+    void join();
 
-    void join() {
-          for (auto& worker : threads_) {
-            if (worker.joinable()) {
-                worker.join();
-            }
-        }  
-    }
+    void stop();
 
-    void stop() {
-        stop_ = true;
-        io_context_.stop();
-        join();
-    }
-
-    ~ThreadPool777() {
-        join(); //stop();
-    };
+    ~ThreadPool777();
 
 
 //public:
  
-    void submit(std::function<void()> task) {
-        {
-            std::lock_guard<std::mutex> lock(queue_mutex_);
-            task_queue_.push_back(task);
-        }
-    }
+    void submit(std::function<void()> task);
 
 private:
-    void worker() {
-        while (!stop_) {
-            std::function<void()> task;
-            {
-                std::lock_guard<std::mutex> lock(queue_mutex_);
-                if (!task_queue_.empty()) {
-                    task = std::move(task_queue_.front());
-                    task_queue_.pop_front();
-                }
-            }
-            if (task) {
-                task();
-            }
-        }
-    }
+    void worker();
 
     //std::vector<std::thread> workers_;
     std::deque<std::function<void()>> task_queue_;
@@ -93,10 +46,19 @@ private:
 
 public:
     std::vector<std::thread> threads_;  
+
     size_t num_threads_;
+
     boost::asio::executor_work_guard<boost::asio::io_context::executor_type> work_guard_;
 
     boost::asio::io_context& get_io_context() {
         return io_context_;
-    }
+    };
+
+    // Post a task to the thread pool
+    template <typename F>
+    void  post(F&& f) {
+        boost::asio::post(io_context_, std::forward<F>(f));
+    };
+
 };

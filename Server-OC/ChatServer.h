@@ -10,10 +10,11 @@
 #include <mutex>
 #include <boost/asio.hpp>
 #include "../ShareItemsProject/ThreadPool.h"
+#include <BaseClientServer.h>
 
 using boost::asio::ip::tcp;
 
-class ChatServer
+class ChatServer : BaseClientServer
 {
 
 private:
@@ -44,11 +45,14 @@ private:
 
 	std::vector<std::shared_ptr<boost::asio::ip::tcp::socket>> clients_;
 
+	bool init = false;
+
 public:
 
 	ChatServer(boost::asio::io_context& io_context, const std::string& port, size_t thread_pool_size);
 
 	ThreadPool777 thread_pool_;
 
+	void broadcast_message(MessageLP message, std::shared_ptr<tcp::socket> sender_socket);
 };
 #endif;
