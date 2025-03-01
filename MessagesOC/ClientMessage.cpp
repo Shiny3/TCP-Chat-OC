@@ -33,7 +33,7 @@
     /**/
     void ClientMessage::readSingleFromConsole() {
 
-        std::cout << "Enter message: ";
+        //std::cout << "Enter message: ";
         std::getline(std::cin, content);
     }
 

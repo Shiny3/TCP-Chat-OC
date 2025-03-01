@@ -31,7 +31,7 @@ public:
 
     void run() {
         for (size_t i = 0; i < num_threads_; ++i) {
-            workers_.emplace_back([this]() {
+            threads_.emplace_back([this]() {
                 worker(); 
                 //boost::asio::io_context::work work(io_context_);
                 io_context_.run();
@@ -39,12 +39,8 @@ public:
         }
     }
 
-    boost::asio::io_context& get_io_context() {
-        return io_context_;
-    }
-
     void join() {
-          for (auto& worker : workers_) {
+          for (auto& worker : threads_) {
             if (worker.joinable()) {
                 worker.join();
             }
@@ -67,7 +63,7 @@ public:
     void submit(std::function<void()> task) {
         {
             std::lock_guard<std::mutex> lock(queue_mutex_);
-            task_queue_.push_back(std::move(task));
+            task_queue_.push_back(task);
         }
     }
 
@@ -91,12 +87,16 @@ private:
     //std::vector<std::thread> workers_;
     std::deque<std::function<void()>> task_queue_;
     std::mutex queue_mutex_;
-    bool stop_;
+    bool stop_ = false;
 
-
-//private:
-    size_t num_threads_;
     boost::asio::io_context io_context_;
-    std::vector<std::thread> workers_;
+
+public:
+    std::vector<std::thread> threads_;  
+    size_t num_threads_;
     boost::asio::executor_work_guard<boost::asio::io_context::executor_type> work_guard_;
+
+    boost::asio::io_context& get_io_context() {
+        return io_context_;
+    }
 };

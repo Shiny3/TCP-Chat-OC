@@ -2,11 +2,11 @@
 
  
 
-set ROOT_DIR=C:\Users\Shiny#\OneDrive\Documents\GitHub\TCP-Chat-OC\TCP-Chat-OC
+set ROOT_DIR=D:\Rabota\OPENCODE\long coommit\TCP-Chat-OC-main\x64\Debug
 
  
-set client_exe=Client-OC\x64\Debug\Client-OC.exe
-set server_exe=Server-OC\x64\Release\Server-OC.exe
+set client_exe=Client-OC.exe
+set server_exe=Server-OC.exe
 
 set CLIENT_FULL_PATH=%ROOT_DIR%\%client_exe%
 set SERVER_FULL_PATH=%ROOT_DIR%\%server_exe%

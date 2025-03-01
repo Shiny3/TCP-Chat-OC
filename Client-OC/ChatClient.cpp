@@ -86,7 +86,7 @@ void ChatClient::connect() {
                 
                // boost::asio::write(socket_, boost::asio::buffer(encrypted_msg + "#"));
                 
-                std::cout << "                             ...sent " << std::endl;
+                //std::cout << "Message sent. " << std::endl;
                 //std::cout << "Bytes written: " << bytes_written << std::endl;
             }
             catch (std::exception& e) {

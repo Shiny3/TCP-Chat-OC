@@ -56,6 +56,7 @@
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
   <ImportGroup Label="Shared">
+    <Import Project="..\ShareItemsProject\ShareItemsProject.vcxitems" Label="Shared" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -71,12 +72,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\Shiny#\OneDrive\Documents\GitHub\TCP-Chat-OC\TCP-Chat-OC\MessagesOC;D:\Develop\libraries\C++\boost_1_78_0;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Shiny#\OneDrive\Documents\GitHub\TCP-Chat-OC\TCP-Chat-OC\MessagesOC;D:\Develop\libraries\C++\boost_1_78_0\stage;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\MessagesOC;D:\Develop\libraries\C++\boost_1_78_0;$(IncludePath)</IncludePath>
+    <LibraryPath>..\MessagesOC;D:\Develop\libraries\C++\boost_1_78_0\stage;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Users\Shiny#\OneDrive\Documents\GitHub\TCP-Chat-OC\TCP-Chat-OC\MessagesOC;D:\Develop\libraries\C++\boost_1_78_0;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Shiny#\OneDrive\Documents\GitHub\TCP-Chat-OC\TCP-Chat-OC\MessagesOC;D:\Develop\libraries\C++\boost_1_78_0\stage;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\MessagesOC;D:\Develop\libraries\C++\boost_1_78_0;$(IncludePath)</IncludePath>
+    <LibraryPath>..\MessagesOC;D:\Develop\libraries\C++\boost_1_78_0\stage;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -112,8 +113,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../MessagesOC;D:\Develop\libraries\C++\boost_1_78_0\stage;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalModuleDependencies>../MessagesOC;%(AdditionalModuleDependencies)</AdditionalModuleDependencies>
+      <AdditionalIncludeDirectories>..\MessagesOC;D:\Develop\libraries\C++\boost_1_78_0\stage;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalModuleDependencies>..\MessagesOC;%(AdditionalModuleDependencies)</AdditionalModuleDependencies>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -129,8 +130,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>../MessagesOC;D:\Develop\libraries\C++\boost_1_78_0\stage;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalModuleDependencies>../MessagesOC;%(AdditionalModuleDependencies)</AdditionalModuleDependencies>
+      <AdditionalIncludeDirectories>..\MessagesOC;D:\Develop\libraries\C++\boost_1_78_0\stage;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalModuleDependencies>..\MessagesOC;%(AdditionalModuleDependencies)</AdditionalModuleDependencies>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -143,12 +144,10 @@
   <ItemGroup>
     <ClCompile Include="ChatClient.cpp" />
     <ClCompile Include="Client-OC.cpp" />
-    <ClCompile Include="server_pool.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\OneDrive\Documents\GitHub\TCP-Chat-OC\TCP-Chat-OC\Client-OC\ChatClient.h" />
     <ClInclude Include="ChatClient.h" />
-    <ClInclude Include="ClientHandler.h" />
-    <ClInclude Include="server_pool.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MessagesOC\MessagesOC.vcxproj">

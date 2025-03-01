@@ -7,6 +7,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client-OC", "Client-OC\Clie
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Server-OC", "Server-OC\Server-OC.vcxproj", "{E1022187-7D6B-4675-8797-8958908D8074}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MessagesOC", "MessagesOC\MessagesOC.vcxproj", "{C287D6B1-FF55-4087-A0E8-02C960F5F28A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CommunicationShared", "ShareItemsProject\ShareItemsProject.vcxitems", "{0D4ADB1B-854D-4B3E-BF87-62619DA5B25E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -31,11 +35,23 @@ Global
 		{E1022187-7D6B-4675-8797-8958908D8074}.Release|x64.Build.0 = Release|x64
 		{E1022187-7D6B-4675-8797-8958908D8074}.Release|x86.ActiveCfg = Release|Win32
 		{E1022187-7D6B-4675-8797-8958908D8074}.Release|x86.Build.0 = Release|Win32
+		{C287D6B1-FF55-4087-A0E8-02C960F5F28A}.Debug|x64.ActiveCfg = Debug|x64
+		{C287D6B1-FF55-4087-A0E8-02C960F5F28A}.Debug|x64.Build.0 = Debug|x64
+		{C287D6B1-FF55-4087-A0E8-02C960F5F28A}.Debug|x86.ActiveCfg = Debug|Win32
+		{C287D6B1-FF55-4087-A0E8-02C960F5F28A}.Debug|x86.Build.0 = Debug|Win32
+		{C287D6B1-FF55-4087-A0E8-02C960F5F28A}.Release|x64.ActiveCfg = Release|x64
+		{C287D6B1-FF55-4087-A0E8-02C960F5F28A}.Release|x64.Build.0 = Release|x64
+		{C287D6B1-FF55-4087-A0E8-02C960F5F28A}.Release|x86.ActiveCfg = Release|Win32
+		{C287D6B1-FF55-4087-A0E8-02C960F5F28A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B5B37B33-F343-493F-BBA5-6FA67DACC6FF}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		ShareItemsProject\ShareItemsProject.vcxitems*{0d4adb1b-854d-4b3e-bf87-62619da5b25e}*SharedItemsImports = 9
+		ShareItemsProject\ShareItemsProject.vcxitems*{7940aa5c-2133-44c2-a8ff-ed6ef50c6631}*SharedItemsImports = 4
 	EndGlobalSection
 EndGlobal

@@ -24,19 +24,13 @@
     <ClCompile Include="ChatClient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="server_pool.cpp">
-      <Filter>ThreadPool</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ChatClient.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ClientHandler.h">
-      <Filter>ThreadPool</Filter>
-    </ClInclude>
-    <ClInclude Include="server_pool.h">
-      <Filter>ThreadPool</Filter>
+    <ClInclude Include="..\..\..\..\OneDrive\Documents\GitHub\TCP-Chat-OC\TCP-Chat-OC\Client-OC\ChatClient.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

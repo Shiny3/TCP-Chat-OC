@@ -4,30 +4,16 @@
     <Filter Include="ThreadPool">
       <UniqueIdentifier>{106a8caf-fd31-4c0b-a951-9fc0985b9dc3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Messages">
-      <UniqueIdentifier>{4b156296-d581-4beb-8cb0-918d5e83c9aa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Messages\Length-Prefix">
-      <UniqueIdentifier>{cd90e971-6c27-4e0f-9628-246134226ecc}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)ThreadPool.cpp">
       <Filter>ThreadPool</Filter>
     </ClCompile>
-    <ClCompile Include="$(MSBuildThisFileDirectory)BaseClientServer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="$(MSBuildThisFileDirectory)ThreadPool.h">
       <Filter>ThreadPool</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)Cypher.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)send_messages.h">
-      <Filter>Messages\Length-Prefix</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)receive_messages.h">
-      <Filter>Messages\Length-Prefix</Filter>
-    </ClInclude>
-    <ClInclude Include="$(MSBuildThisFileDirectory)BaseClientServer.h" />
   </ItemGroup>
 </Project>
