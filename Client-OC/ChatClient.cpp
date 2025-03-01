@@ -91,18 +91,8 @@ void ChatClient::connect() {
                /*TODO: remove connection*/
                if (message == "exit")
                {
-                   std::cout << "Client Requested to Exit.\n";
-                   stop();
-                   std::cout << "The Client Window Will Close In 5 Seconds..." << std::endl;
-                   Sleep(5000);
-
-                   HWND hwnd = GetConsoleWindow(); // Get a handle to the console window
-                   if (hwnd != nullptr)
-                   {
-                       PostMessage(hwnd, WM_CLOSE, 0, 0); // Post a WM_CLOSE message to the console window
-                   }
+                   close_window();
                    break;
-                   
                }
 
                // boost::asio::write(socket_, boost::asio::buffer(encrypted_msg + "#"));
@@ -124,7 +114,18 @@ void ChatClient::connect() {
 
 };
 
- 
+void ChatClient::close_window() {
+    std::cout << "Client Requested to Exit.\n";
+    stop();
+    std::cout << "The Client Window Will Close In 5 Seconds..." << std::endl;
+    Sleep(5000);
+
+    HWND hwnd = GetConsoleWindow(); // Get a handle to the console window
+    if (hwnd != nullptr)
+    {
+        PostMessage(hwnd, WM_CLOSE, 0, 0); // Post a WM_CLOSE message to the console window
+    }
+}
 
 // Communication logic in a separate thread
 /**/

@@ -33,6 +33,8 @@ class ChatClient : BaseClientServer
 
     bool is_running_;
 
+    void close_window();
+
 public:
 
   //  void send_message(const std::string& msg);
