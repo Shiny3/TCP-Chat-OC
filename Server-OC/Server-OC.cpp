@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include "ChatServer.h"
-
+#include "../MessagesOC/MessageLengthPrefixed.h"
 int main(int argc, char* argv[]) {
 
     std::string IPAddress;

@@ -12,6 +12,9 @@
 //extern "C"  MESSAGE_API void Message();
 */
 #include <string>
+#include <boost/asio.hpp>
+#include <iostream>
+#include "MessageLengthPrefixed.h"
 
 class Message {
 

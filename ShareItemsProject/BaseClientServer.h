@@ -12,6 +12,7 @@
 #include <cstdint>
 #include <string>
 #include <chrono>
+#include "../MessagesOC/MessageLengthPrefixed.h"
  
 class MessageLP
 {
@@ -64,7 +65,7 @@ public:
         boost::asio::write(socket, boost::asio::buffer(message));
     }
 
-    const std::string& receive_message(boost::asio::ip::tcp::socket& socket) {
+    const std::string& receive_message1(boost::asio::ip::tcp::socket& socket) {
         // First, read the header (4 bytes for message length)
         uint32_t message_size;
         boost::asio::read(socket, boost::asio::buffer(&message_size, sizeof(message_size)));
@@ -236,4 +237,8 @@ public:
         return message;
     };
 
+
+    void send_message(boost::asio::ip::tcp::socket& socket, const MessageLengthPrefixed& message);
+
+    MessageLengthPrefixed receive_message(boost::asio::ip::tcp::socket& socket);
 };

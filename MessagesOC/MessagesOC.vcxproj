@@ -70,12 +70,21 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>D:\Develop\libraries\C++\boost_1_78_0\;D:\Develop\libraries\C++\openssl-3.4.1\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Develop\libraries\C++\boost_1_78_0\stage;D:\Develop\libraries\C++\openssl-3.4.1\include;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>D:\Develop\libraries\C++\boost_1_78_0\;D:\Develop\libraries\C++\openssl-3.4.1\include;$(IncludePath)</IncludePath>
+    <LibraryPath>D:\Develop\libraries\C++\boost_1_78_0\stage;D:\Develop\libraries\C++\openssl-3.4.1\include;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>D:\Develop\libraries\C++\boost_1_78_0\stage;D:\Develop\libraries\C++\openssl-3.4.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -105,6 +114,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>D:\Develop\libraries\C++\boost_1_78_0\stage;D:\Develop\libraries\C++\openssl-3.4.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,12 +141,14 @@
   <ItemGroup>
     <ClInclude Include="ClientMessage.h" />
     <ClInclude Include="Message.h" />
+    <ClInclude Include="MessageLengthPrefixed.h" />
     <ClInclude Include="ServerMessage.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ClientMessage.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Message.cpp" />
+    <ClCompile Include="MessageLengthPrefixed.cpp" />
     <ClCompile Include="ServerMessage.cpp" />
   </ItemGroup>
   <ItemGroup>

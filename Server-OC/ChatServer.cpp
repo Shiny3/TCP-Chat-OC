@@ -34,9 +34,9 @@ void ChatServer::handle_client(std::shared_ptr<tcp::socket> client_socket) {
 
             boost::system::error_code error;
 
-            std::string message;
+            //std::string message;
             /*TODO:*/
-            /*message = BaseClientServer::receive_message(*client_socket);
+            /*message = BaseClientServer::receive_message1(*client_socket);
             
        
             if (error) {
@@ -80,15 +80,22 @@ void ChatServer::handle_client(std::shared_ptr<tcp::socket> client_socket) {
                 broadcast_message(message, client_socket);
             }*/
 
-            size_t length = client_socket->read_some(boost::asio::buffer(data), error);
+            // Receive the message
+            MessageLengthPrefixed received_message = BaseClientServer::receive_message(*client_socket);
+            std::cout << "Received message from " << received_message.get_client_name() << ": "
+                << received_message.get_message() << std::endl;
+
+            //size_t length = client_socket->read_some(boost::asio::buffer(data), error);
+
             if (error) {
                 //std::cerr << "Reading failed..." << std::endl;
                 break;
             }
+            const std::string message = received_message.get_message();
 
-            if (length > 0) {
+            if (message.length() > 0) {
 
-                std::string message(data, length);
+                //std::string message(data, length);
                 std::cout << "Received: " << message << std::endl;
 
                 /*TODO: remove connection*/
@@ -131,14 +138,22 @@ void ChatServer::broadcast_message(const std::string& message, std::shared_ptr<t
             //size_t bytes_written = (*client).write_some(boost::asio::buffer(message), error);
             //if (error) throw;
 
-            size_t bytes_written = boost::asio::write(*client, boost::asio::buffer(message), error);
+
+                // Create a message
+            MessageLengthPrefixed messagelp("server", message);
+
+            // Send the message
+            BaseClientServer::send_message(*client, messagelp);
+            std::cout << "Message sent: " << messagelp.get_message() << std::endl;
+
+            /*size_t bytes_written = boost::asio::write(*client, boost::asio::buffer(message), error);
             if (!error) {
                 std::cout << "Sent to a client." << bytes_written << std::endl;
                 //std::cout << "Bytes written: " << bytes_written << std::endl;
             }
             else {
                 std::cout << "Error: " << error.message() << std::endl;
-            }
+            }*/
             /*BaseClientServer::send_message(*client, message);*/
         }
     }

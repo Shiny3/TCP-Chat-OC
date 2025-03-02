@@ -1,7 +1,6 @@
 #include "ChatClient.h"
 #include "../ShareItemsProject/Cypher.h"
-
-
+ 
 // Send a message to the server
 /**/
 bool ChatClient::send_messages() {
@@ -35,14 +34,15 @@ bool ChatClient::send_messages() {
                 // Send the message using write_some
 
                 /* BaseClientServer::send_message(*socket_, message);*/ 
-                /*//comment message_to_server(message);*/
+                /**/  message_to_server(message);// comment
               
+
 
                //std::string encrypted_msg = Cipher::encrypt(message);
                //size_t bytes_written = (*socket_).write_some(boost::asio::buffer(encrypted_msg), ec);
 
-               size_t bytes_written = (*socket_).write_some(boost::asio::buffer(message), ec);
-               if (ec) throw;
+               //size_t bytes_written = (*socket_).write_some(boost::asio::buffer(message), ec);
+               //if (ec) throw;
                 
                if (message == "exit")
                {
@@ -92,13 +92,18 @@ void ChatClient::receive_messages() {
         while (true) {
 
            // std::string message;
-           //   message = BaseClientServer::receive_message(*socket_);
+           //   message = BaseClientServer::receive_message1(*socket_);
          
             /* MessageLP lp_message = read_message(*socket_);
 
             std::cout << "Received from server: " << lp_message.to_string() << std::endl; */
 
-           boost::system::error_code error;
+            // Receive the message
+            MessageLengthPrefixed received_message = BaseClientServer::receive_message(*socket_);
+            std::cout << "Received message from " << received_message.get_client_name() << ": "
+                << received_message.get_message() << std::endl;
+
+           /*boost::system::error_code error;
             size_t length = (*socket_).read_some(boost::asio::buffer(data), error);
 
             if (error) {
@@ -111,7 +116,7 @@ void ChatClient::receive_messages() {
                 //std::string decrypted_msg = Cipher::decrypt(std::string(data, length));
                 //std::cout << "Received from server: " << decrypted_msg << std::endl;
                 std::cout << "Received from server: " << std::string(data, length) << std::endl;
-            }
+            }*/
         }
     }
     catch (const std::exception& e) {
@@ -148,12 +153,21 @@ TODO:
 */
 void ChatClient::message_to_server(const std::string& message)
 {
-    // Create a sample message to send
+    /*// Create a sample message to send
      MessageLP *lp_message = new MessageLP(message, name_);   
     // Send the message to the server
    BaseClientServer::write_message(*socket_, *lp_message);
 
     std::cout << "Message sent to the server." << std::endl;
+*/
+
+    // Create a message
+    MessageLengthPrefixed messagelp(name_, message);
+
+    // Send the message
+    BaseClientServer::send_message(*socket_, messagelp);
+    std::cout << "Message sent: " << messagelp.get_message() << std::endl;
+
 }
 
 ChatClient::ChatClient(const std::string& name, boost::asio::io_context& io_context, const std::string& host, const std::string& port)

@@ -10,6 +10,7 @@
 #include "ClientMessage.h"
 #include "../ShareItemsProject/ThreadPool.h"
 #include <BaseClientServer.h>
+#include "../MessagesOC/MessageLengthPrefixed.h"
 
 using boost::asio::ip::tcp;
 

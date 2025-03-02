@@ -144,6 +144,11 @@
   <ItemGroup>
     <ClInclude Include="ChatServer.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MessagesOC\MessagesOC.vcxproj">
+      <Project>{c287d6b1-ff55-4087-a0e8-02c960f5f28a}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
