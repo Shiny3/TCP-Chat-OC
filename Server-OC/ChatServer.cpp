@@ -20,7 +20,89 @@ ChatServer::ChatServer(boost::asio::io_context& io_context, const std::string& p
     start_server_pool();
    //  start_server();
 }
+/*
+TODO:
+*/
 
+/*
+Broadcast message to the rest clients.
+*/
+
+void ChatServer::broadcast_message(MessageLengthPrefixed& messagelp, std::shared_ptr<tcp::socket> sender_socket) {
+
+    std::lock_guard<std::mutex> lock(clients_mutex);
+
+    for (auto& client : clients_) {
+
+        if (client != sender_socket) {
+
+            // Send the message
+            BaseClientServer::send_message(*client, messagelp);
+            std::cout << "Message sent: " << messagelp.get_message() << std::endl;
+        }
+    }
+}
+
+bool  ChatServer::reading_messages(std::shared_ptr<boost::asio::ip::tcp::socket>  client_socket) {
+
+    //std::string message1;
+    //message1 = BaseClientServer::receive_message1(*client_socket);
+
+
+    /* MessageLP lp_message = read_message(*socket_);
+
+    std::cout << "Received from server: " << lp_message.to_string() << std::endl; */
+
+    // Receive the message
+    MessageLengthPrefixed received_message = receive_message(*client_socket);
+    if (&received_message != nullptr) {
+
+        const std::string message = received_message.get_message();
+
+        if (message.length() > 0) {
+
+            std::cout << "Received message from " << received_message.get_client_name() << ": "
+                << received_message.get_message() << std::endl;
+            /*TODO: remove connection*/
+            if (message == "exit")
+            {
+                return false;
+            }
+ 
+            // Broadcast message to all clients except the sender
+            ChatServer::broadcast_message(received_message, client_socket);
+        }
+        return true;
+    }
+}
+
+// Use write for blocking writes where you want to ensure that all data is written before proceeding.
+//size_t bytes_written1 = boost::asio::write(socket_, boost::asio::buffer(message + " #"));
+
+//Use write_some for non - blocking or asynchronous writes where you want to write as much data as possible immediately.
+// Send the message using write_some
+
+
+void ChatServer::writing_messages(boost::asio::ip::tcp::socket& socket_receiver, const std::string& message, const std::string& from)
+{
+    BaseClientServer::send_message1(socket_receiver, message);
+
+    /*// Create a sample message to send
+     MessageLP *lp_message = new MessageLP(message, name_);
+    // Send the message to the server
+   BaseClientServer::write_message(*socket_, *lp_message);
+
+    std::cout << "Message sent to the server." << std::endl;
+*/
+
+// Create a message
+    MessageLengthPrefixed messagelp(port_, message);
+
+    // Send the message
+    BaseClientServer::send_message(socket_receiver, messagelp);
+    std::cout << "Message sent: " << messagelp.get_message() << std::endl;
+
+}
 
 /*
 Handle client - reading the messages from a accepted client.
@@ -29,85 +111,9 @@ void ChatServer::handle_client(std::shared_ptr<tcp::socket> client_socket) {
 
     try {
 
-        char data[1024];
         while (true) {
 
-            boost::system::error_code error;
-
-            //std::string message;
-            /*TODO:*/
-            /*message = BaseClientServer::receive_message1(*client_socket);
-            
-       
-            if (error) {
-                std::cerr << "Reading failed... "<<std::endl << error.message() << std::endl;
-                break;
-            }
-
-            if (message.length() > 0) {
- 
-                std::cout << "Received: " << message << std::endl;
-            }*/
-
-            //comment
-
-
-            /*
-
-            MessageLP *lp_message = nullptr;
-            if (init)
-            {
-                *lp_message = read_message(*client_socket);
-            }
-            init = true;
-
-            if (lp_message != nullptr) {
-                broadcast_message(*lp_message, client_socket);
-            }*/
-
-            /*size_t length = read(*client_socket, boost::asio::buffer(data), error);
-            if (error) {
-                std::cerr << "Reading failed..." << std::endl;
-                break;
-            }
-
-            if (length > 0) {
-
-                std::string message(data, length);
-                std::cout << "Received: " << message << std::endl;
-
-                // Broadcast message to all clients except the sender
-                broadcast_message(message, client_socket);
-            }*/
-
-            // Receive the message
-            MessageLengthPrefixed received_message = BaseClientServer::receive_message(*client_socket);
-            std::cout << "Received message from " << received_message.get_client_name() << ": "
-                << received_message.get_message() << std::endl;
-
-            //size_t length = client_socket->read_some(boost::asio::buffer(data), error);
-
-            if (error) {
-                //std::cerr << "Reading failed..." << std::endl;
-                break;
-            }
-            const std::string message = received_message.get_message();
-
-            if (message.length() > 0) {
-
-                //std::string message(data, length);
-                std::cout << "Received: " << message << std::endl;
-
-                /*TODO: remove connection*/
-                if (message == "exit")
-                {
-                    break;
-                }
-
-
-                // Broadcast message to all clients except the sender
-                broadcast_message(message, client_socket);
-            }
+            reading_messages(client_socket);
         }
     }
     catch (std::exception& e) {
@@ -121,71 +127,7 @@ void ChatServer::handle_client(std::shared_ptr<tcp::socket> client_socket) {
     }
 }
 
-/*
-Broadcast message to the rest clients.
-*/
-void ChatServer::broadcast_message(const std::string& message, std::shared_ptr<tcp::socket> sender_socket) {
 
-    std::lock_guard<std::mutex> lock(clients_mutex);
-
-    for (auto& client : clients_) {
-
-        if (client != sender_socket) {
-
-            // Create a sample message to send
-            boost::system::error_code error;
-
-            //size_t bytes_written = (*client).write_some(boost::asio::buffer(message), error);
-            //if (error) throw;
-
-
-                // Create a message
-            MessageLengthPrefixed messagelp("server", message);
-
-            // Send the message
-            BaseClientServer::send_message(*client, messagelp);
-            std::cout << "Message sent: " << messagelp.get_message() << std::endl;
-
-            /*size_t bytes_written = boost::asio::write(*client, boost::asio::buffer(message), error);
-            if (!error) {
-                std::cout << "Sent to a client." << bytes_written << std::endl;
-                //std::cout << "Bytes written: " << bytes_written << std::endl;
-            }
-            else {
-                std::cout << "Error: " << error.message() << std::endl;
-            }*/
-            /*BaseClientServer::send_message(*client, message);*/
-        }
-    }
-}
-
-
-/*
-Broadcast message to the rest clients.
-*/
-void ChatServer::broadcast_message(MessageLP lp_message, std::shared_ptr<tcp::socket> sender_socket) {
-
-    std::lock_guard<std::mutex> lock(clients_mutex);
-
-    std::cout << "Message to sent:  "<<std::endl << lp_message.sender << "   ." << std::endl;
-
-    for (auto& client : clients_) {
-
-        if (client != sender_socket) {
-
-            // Create a sample message to send
-            
-            // Send the message to the server
-            BaseClientServer::write_message(*sender_socket,  lp_message);
-            std::cout << "Message sent to   "<< lp_message.sender <<"   ." << std::endl;
-
-            boost::system::error_code error;
-             
- 
-            /*BaseClientServer::send_message(*client, message);*/
-        }
-    }
-}
 /*
 Remove client when is disconnected.
 */

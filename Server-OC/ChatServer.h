@@ -20,8 +20,6 @@ class ChatServer : BaseClientServer
 
 private:
 
-	void broadcast_message(const std::string& message, std::shared_ptr<tcp::socket> sender_socket);
-
 	void handle_client(std::shared_ptr<tcp::socket> client_socket);
 
 	void handle_accept(std::shared_ptr<tcp::socket> client_socket, const boost::system::error_code& error);
@@ -54,6 +52,10 @@ public:
 
 	ThreadPool777 thread_pool_;
 
-	void broadcast_message(MessageLP message, std::shared_ptr<tcp::socket> sender_socket);
+	void broadcast_message(MessageLengthPrefixed& messagelp, std::shared_ptr<tcp::socket> sender_socket);
+
+	void writing_messages(boost::asio::ip::tcp::socket& socket, const std::string& message, const std::string& from) override;
+
+	bool reading_messages(std::shared_ptr<boost::asio::ip::tcp::socket> socket) override;
 };
 #endif;

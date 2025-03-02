@@ -43,8 +43,9 @@ class ChatClient : BaseClientServer
 
     void receive_messages();
 
-    void message_to_server(const std::string& message);
+    void writing_messages(boost::asio::ip::tcp::socket& socket,const std::string& message, const std::string& from) override;
 
+    bool reading_messages(std::shared_ptr<boost::asio::ip::tcp::socket>  socket) override;
 
 public:
 

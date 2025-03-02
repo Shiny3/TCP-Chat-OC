@@ -42,46 +42,23 @@ public:
 class BaseClientServer
 {
 
+protected:
+
+    void send_message(boost::asio::ip::tcp::socket& socket, const MessageLengthPrefixed& message);
+
+    MessageLengthPrefixed receive_message(boost::asio::ip::tcp::socket& socket);
+
+    virtual void writing_messages(boost::asio::ip::tcp::socket& socket, const std::string& message, const std::string& from) = 0;
+
+    virtual bool reading_messages(std::shared_ptr<boost::asio::ip::tcp::socket>  socket) = 0;
+
 public:
 
 
-    void send_message(boost::asio::ip::tcp::socket& socket, const std::string& message) {
+    void send_message1(boost::asio::ip::tcp::socket& socket, const std::string& message);
 
-        // Create a buffer for the message size (4 bytes for a 32-bit integer)
-        uint32_t message_size = static_cast<uint32_t>(message.size());
+    const std::string& receive_message1(boost::asio::ip::tcp::socket& socket);
 
-        // Convert the message size to network byte order (big-endian)
-        message_size = htonl(message_size);
-
-        // Create a buffer for the message header (4 bytes)
-        boost::asio::streambuf header_buffer;
-        std::ostream header_stream(&header_buffer);
-        header_stream.write(reinterpret_cast<char*>(&message_size), sizeof(message_size));
-
-        // Send the header (size information)
-        boost::asio::write(socket, header_buffer);
-
-        // Send the message body (the actual message)
-        boost::asio::write(socket, boost::asio::buffer(message));
-    }
-
-    const std::string& receive_message1(boost::asio::ip::tcp::socket& socket) {
-        // First, read the header (4 bytes for message length)
-        uint32_t message_size;
-        boost::asio::read(socket, boost::asio::buffer(&message_size, sizeof(message_size)));
-
-        // Convert from network byte order to host byte order
-        message_size = ntohl(message_size);
-
-        // Read the message body
-        std::vector<char> buffer(message_size);
-        boost::asio::read(socket, boost::asio::buffer(buffer));
-
-        std::string message(buffer.begin(), buffer.end());
-        std::cout << "Received message: " << message << std::endl;
-
-        return message;
-    }
     /*
     void send_message_async(boost::asio::ip::tcp::socket& socket, const std::string& body) {
         MessageLP message;
@@ -238,7 +215,4 @@ public:
     };
 
 
-    void send_message(boost::asio::ip::tcp::socket& socket, const MessageLengthPrefixed& message);
-
-    MessageLengthPrefixed receive_message(boost::asio::ip::tcp::socket& socket);
 };
