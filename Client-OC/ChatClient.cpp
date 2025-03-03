@@ -16,24 +16,26 @@ bool ChatClient::send_messages() {
 
         std::string message;
 
-        while (true) {
+        while (is_running_) {
 
             //  cl_message->readMultiFromConsole('#');
             cl_message->readSingleFromConsole();
             message = cl_message->getContent();
 
-            writing_messages(*socket_, message, name_); 
-
             // Register the console handler using the address-of operator '&'
             if (!SetConsoleCtrlHandler(&BaseClientServer::ConsoleHandler, TRUE)) {
                 std::cerr << "Error: Could not set control handler" << std::endl;
-                return false;
+               // ClosingConnection();
+                writing_messages(*socket_, "exit", name_);
+                break;
             }
+
+            writing_messages(*socket_, message, name_); 
 
             if (message == "exit")
             {
                 std::cout << "Client Requested to Exit.\n";
-                stop();
+               // ClosingConnection();
                 std::cout << "The Client Window Will Close In 2 Seconds..." << std::endl;
                 Sleep(2000);
 
@@ -41,7 +43,8 @@ bool ChatClient::send_messages() {
                 break;
             }
         }
-        return false;
+
+        return is_running_;
     }
     catch (const std::exception& e) {
 
@@ -95,7 +98,9 @@ bool  ChatClient::reading_messages(std::shared_ptr<boost::asio::ip::tcp::socket>
                 return true;
             }
         }
-        else return false;
+        else { 
+            return false;
+        }
    /* }
     catch (const std::exception& e) {
 
@@ -117,7 +122,8 @@ void ChatClient::writing_messages(boost::asio::ip::tcp::socket& socket, const st
 
 }
 
-void ChatClient::stop() {
+void ChatClient::ClosingConnection() {
+
     is_running_ = false;
    (*socket_).close();
 }
@@ -154,8 +160,11 @@ void ChatClient::connect() {
 
     try {
         // Connect the socket
+        is_running_ = true;
         boost::asio::connect(*socket_, resolver_.resolve(ip_, port_));
+        writing_messages(*socket_, "Is Connected Successfully. ", name_);
         std::cout << name_ << " Connected Successfully!" << std::endl;
+ 
     }
     catch (const std::exception& e) {
         std::cerr << name_ << " Connected Failed. " << e.what() << std::endl;

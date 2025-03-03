@@ -30,14 +30,16 @@ class ChatClient : BaseClientServer
 
     std::string name_;
 
-    bool is_running_;
+    bool  is_running_= false;
 
-    void stop();
+    void ClosingConnection();
 
     void run();
 
     //***********************//
 
+
+    /*loop function for receiving*/
     void receive_messages();
 
     void writing_messages(boost::asio::ip::tcp::socket& socket,const std::string& message, const std::string& from) override;
@@ -50,6 +52,7 @@ public:
 
     std::shared_ptr<std::thread> communication_thread;
 
+    /*loop function for sending*/
     bool send_messages();
 
     void start();

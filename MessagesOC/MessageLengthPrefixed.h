@@ -34,13 +34,10 @@ private:
 public:
 
     ~MessageLengthPrefixed() {
-   
-
+ 
         // Cleanup code (if any) goes here
         // Since std::string and std::chrono::system_clock::time_point handle their own cleanup,
         // there may not be a need for explicit cleanup code here.
-        // 
-        //std::cout << "MessageLengthPrefixed object for " << client_name_ << " destroyed." << std::endl;
     }
 
     MessageLengthPrefixed(const std::string& client_name, const std::string& message)

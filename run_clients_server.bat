@@ -22,7 +22,7 @@ REM start "" "%CLIENT_FULL_PATH%"   # Run the third client instance
 
 REM This batch file starts a new command prompt window with parameters
 
-set name=client111
+set name=client999
 set host=127.0.0.1
 set port=12345
 
@@ -36,7 +36,7 @@ set host2=127.0.0.1
 set port2=12345
 
 REM Replace "yourCommand" with the command you want to run
-start "" "%CLIENT_FULL_PATH%" "%name%" "%host%" "%port%"
+start "" "%CLIENT_FULL_PATH%" "%name2%" "%host2%" "%port2%"
 
 REM echo Client started on  %name2% %host2%:%port2%.
 

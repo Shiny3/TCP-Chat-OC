@@ -57,10 +57,13 @@ bool  ChatServer::reading_messages(std::shared_ptr<boost::asio::ip::tcp::socket>
         //std::cout << "Received message from ";
         std::cout <<"   " << (*received_message).get_client_name() << ": "
             << (*received_message).get_message() << std::endl;
-        /*TODO: remove connection*/
+
         if (message == "exit")
         {
-            // close_window();
+            const std::string client = (*received_message).get_client_name();
+            MessageLengthPrefixed messagelp = MessageLengthPrefixed(client, "has left the room.");
+            ChatServer::broadcast_message(std::make_shared<MessageLengthPrefixed>(messagelp), client_socket);  
+            std::cout << client + " has Left the Room." << std::endl;
             return false;
         }
 
@@ -111,6 +114,7 @@ void ChatServer::handle_client(std::shared_ptr<tcp::socket> client_socket) {
     {
         remove_client(client_socket);
     }
+    std::cout << "Client has Left the Room." << std::endl;
 }
 
 
@@ -130,8 +134,6 @@ void ChatServer::remove_client(std::shared_ptr<tcp::socket> client_socket) {
     if (it != clients_.end()) {
         clients_.erase(it);
     }
-
-    std::cout << "A Client has Left the Room." << std::endl;
 };
 
 /*
@@ -156,8 +158,6 @@ void ChatServer::start_server() {
                 clients_.push_back(client_socket);
 
             }
-
-            std::cout << "Client Is Connected Successfully ." << std::endl;
 
             // Handle client communication in a new thread
             std::thread th(&ChatServer::handle_client, this, client_socket);
@@ -222,8 +222,6 @@ void ChatServer::handle_accept(std::shared_ptr<tcp::socket> client_socket, const
             std::lock_guard<std::mutex> lock(clients_mutex);
             clients_.push_back(client_socket);
         }
-
-        std::cout << "Client Is Connected Successfully ." << std::endl;
 
         /*thread pool adding the new connected client*/
         thread_pool_.submit(
