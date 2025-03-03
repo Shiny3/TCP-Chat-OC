@@ -146,6 +146,7 @@
     <ClCompile Include="Client-OC.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\MessagesOC\ConsoleHandler.h" />
     <ClInclude Include="ChatClient.h" />
   </ItemGroup>
   <ItemGroup>

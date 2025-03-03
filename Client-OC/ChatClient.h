@@ -11,11 +11,14 @@
 #include "../ShareItemsProject/ThreadPool.h"
 #include <BaseClientServer.h>
 #include "../MessagesOC/MessageLengthPrefixed.h"
+#include <ConsoleHandler.h>
 
 using boost::asio::ip::tcp;
 
 class ChatClient : BaseClientServer
 {
+    ConsoleHandler handler;
+
     boost::asio::io_context& io_context_;  
 
     boost::asio::ip::tcp::resolver resolver_; 
@@ -32,7 +35,7 @@ class ChatClient : BaseClientServer
 
     bool  is_running_= false;
 
-    void ClosingConnection();
+  
 
     void run();
 
@@ -46,19 +49,26 @@ class ChatClient : BaseClientServer
 
     bool reading_messages(std::shared_ptr<boost::asio::ip::tcp::socket>  socket) override;
 
-    /* Checking For a Signal of Closing the Connsole By Ctrl+C or X right top corner */
+    /* Checking For a Signal of Closing the Connsole By Ctrl+C or X right top corner 
     static BOOL WINAPI ConsoleHandler(DWORD signal) {
         if (signal == CTRL_CLOSE_EVENT) {
-            std::cerr << "Console window is closing. Performing cleanup..." << std::endl;
-            // Perform any cleanup or resource release here
-            // ...
-            
+            std::cout << "Console window closed!" << std::endl;
+            // Perform cleanup before the application exits
+            // Return TRUE to indicate that you handled the event
+           // is_running_ = false;
             return TRUE;
         }
-        return FALSE;
-    };
+        else if (signal == CTRL_C_EVENT) {
+            std::cout << "Ctrl+C pressed!" << std::endl;
+           // is_running_ = false;
+            return TRUE;
+        }
+        return FALSE; // Let the system handle other signals normally
+    };*/
 
 public:
+
+    void ClosingConnection();
 
     ChatClient(const std::string& name, boost::asio::io_context& io_context, const std::string& host, const std::string& port);
 

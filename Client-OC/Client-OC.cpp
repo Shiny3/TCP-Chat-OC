@@ -6,13 +6,16 @@
 #include <boost/asio/connect.hpp>
 
 #include <thread>
-
-
-
 #include <iostream>
-#include <windows.h>
+//#include <windows.h>
+#include <csignal>
+#include <Windows.h>
 
- 
+
+// Initialize the static member
+//std::shared_ptr<ConsoleHandler> ConsoleHandler::instance = nullptr;
+
+
 int main(int argc, char* argv[]) {
 
     std::string IPAddress;
@@ -38,6 +41,9 @@ int main(int argc, char* argv[]) {
 
         auto client_handler = std::make_shared<ChatClient>(name, io_context, IPAddress, port);
         client_handler->start();
+
+        /*auto handler = std::make_shared<ConsoleHandler>();
+        ConsoleHandler::setInstance(handler);*/
 
         // Accept incoming connections and handle each client with a ClientHandler
         while (client_handler->send_messages()) {

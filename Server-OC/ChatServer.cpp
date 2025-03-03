@@ -60,6 +60,7 @@ bool  ChatServer::reading_messages(std::shared_ptr<boost::asio::ip::tcp::socket>
 
         if (message == "exit")
         {
+            std::lock_guard<std::mutex> lock(clients_mutex);
             const std::string client = (*received_message).get_client_name();
             MessageLengthPrefixed messagelp = MessageLengthPrefixed(client, "has left the room.");
             ChatServer::broadcast_message(std::make_shared<MessageLengthPrefixed>(messagelp), client_socket);  
@@ -166,7 +167,7 @@ void ChatServer::start_server() {
     }
     catch (const std::exception& e) {
 
-        std::cerr << "Connected Failed." << std::endl << "Exception: " << e.what() << std::endl;
+        std::cerr << "Connected Failed.";// << std::endl << "Exception: " << e.what() << std::endl;
     }
 };
 

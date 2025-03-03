@@ -29,5 +29,8 @@
     <ClInclude Include="ChatClient.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\MessagesOC\ConsoleHandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

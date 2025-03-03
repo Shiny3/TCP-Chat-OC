@@ -1,14 +1,14 @@
 #include "BaseClientServer.h"
 
 void BaseClientServer::send_message(boost::asio::ip::tcp::socket& socket, std::shared_ptr<MessageLengthPrefixed> message) {
-    try {
+   // try {
 
         std::vector<uint8_t> data = (*message).to_bytes();
         size_t bytes_written = boost::asio::write(socket, boost::asio::buffer(data));
-    }
+    /* }
     catch (std::exception& e) {
         std::cerr << "Failed to send a message: " << e.what() << std::endl;
-    }
+    }*/
     // Convert message to byte stream
 };
 

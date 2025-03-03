@@ -74,30 +74,45 @@ public:
     
     // Deserialize message from bytes received
     static  std::shared_ptr<MessageLengthPrefixed> from_bytes(const std::vector<uint8_t>& bytes) {
+        //try {
+            std::string client_name;
+            size_t index = 0;
 
-        std::string client_name;
-        size_t index = 0;
+            // Read client name
+            while (bytes[index] != '\0') {
+                client_name += bytes[index++];
+            }
+            index++;  // Skip the null terminator
 
-        // Read client name
-        while (bytes[index] != '\0') {
-            client_name += bytes[index++];
+            // Read size (4 bytes)
+            size_t size = (bytes[index] << 24) | (bytes[index + 1] << 16) | (bytes[index + 2] << 8) | bytes[index + 3];
+            index += 4;
+
+
+            // Read message
+            std::string message(bytes.begin() + index, bytes.begin() + index + size);
+            index += size;
+
+
+            // Read checksum (16 bytes, MD5 hash length)
+            std::vector<unsigned char> datasum(bytes.begin() + index, bytes.end());
+            //MessageLengthPrefixed messagelp =  MessageLengthPrefixed(client_name, message);
+            return std::make_shared<MessageLengthPrefixed>(MessageLengthPrefixed(client_name, message));
+        /* }
+        catch (const std::out_of_range& e) {
+            std::cerr << "Out of range error: " << e.what() << std::endl;
+            // Handle the out of range error, e.g., by returning an error code or performing some cleanup
         }
-        index++;  // Skip the null terminator
+        catch (const std::exception& e) {
+            std::cerr << "Exception: " << e.what() << std::endl;
+            // Handle other exceptions
+        }
+        catch (...) {
+            std::cerr << "Unknown exception occurred." << std::endl;
+            // Handle unknown exceptions
+        }*/
 
-        // Read size (4 bytes)
-        size_t size = (bytes[index] << 24) | (bytes[index + 1] << 16) | (bytes[index + 2] << 8) | bytes[index + 3];
-        index += 4;
-
-        // Read message
-        std::string message(bytes.begin() + index, bytes.begin() + index + size);
-        index += size;
-
-        // Read checksum (16 bytes, MD5 hash length)
-        std::vector<unsigned char> datasum(bytes.begin() + index, bytes.end());
-        //MessageLengthPrefixed messagelp =  MessageLengthPrefixed(client_name, message);
-        return std::make_shared<MessageLengthPrefixed>(MessageLengthPrefixed(client_name, message));
-
-    }
+    };
 
     const std::string& get_client_name() const { return client_name_; }
     const std::string& get_message() const { return message_; }

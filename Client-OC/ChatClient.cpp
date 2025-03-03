@@ -18,19 +18,9 @@ bool ChatClient::send_messages() {
 
         while (is_running_) {
 
-            // Register the console handler using the address-of operator '&'
-            if (!SetConsoleCtrlHandler(&ConsoleHandler, TRUE)) {
-                std::cerr << "Error: Could not set control handler" << std::endl;
-               // ClosingConnection();
-
-                break;
-            }
-
-
             //  cl_message->readMultiFromConsole('#');
             cl_message->readSingleFromConsole();
             message = cl_message->getContent();
-
 
             writing_messages(*socket_, message, name_); 
 
@@ -65,50 +55,48 @@ void ChatClient::receive_messages() {
     }
     catch (const std::exception& e) {
 
-        std::cerr << "Server Is Not Active";
+        std::cerr << "Connection Failed.";
     }
 };
 
 bool  ChatClient::reading_messages(std::shared_ptr<boost::asio::ip::tcp::socket>  socket) {
 
-    // Receive the message
-    //try {
 
-        std::shared_ptr<MessageLengthPrefixed> received_message = receive_message(*socket);
+    std::shared_ptr<MessageLengthPrefixed> received_message = receive_message(*socket);
 
-        if (received_message != nullptr) {
+    if (received_message != nullptr) {
+
+        const std::string message = (*received_message).get_message();
+
+        if (message.length() > 0) {
+
+            //std::cout << "Sent At:  ";
+            (*received_message).print_timestamp();// << std::endl;
+
+            // std::cout << "Received message from " << (*received_message).get_client_name() << ": "
+            //     << (*received_message).get_message() << std::endl;
 
             const std::string message = (*received_message).get_message();
+            //std::cout << "Received message from ";
+            std::cout << "   " << (*received_message).get_client_name() << ": "
+                << (*received_message).get_message() << std::endl;
 
-            if (message.length() > 0) {
+            //std::cout << " At:  ";
+            //MessageLengthPrefixed::print_time_now();
 
-                //std::cout << "Sent At:  ";
-                (*received_message).print_timestamp();// << std::endl;
-
-               // std::cout << "Received message from " << (*received_message).get_client_name() << ": "
-               //     << (*received_message).get_message() << std::endl;
-
-                const std::string message = (*received_message).get_message();
-                //std::cout << "Received message from ";
-                std::cout << "   " << (*received_message).get_client_name() << ": "
-                    << (*received_message).get_message() << std::endl;
-
-                //std::cout << " At:  ";
-                //MessageLengthPrefixed::print_time_now();
-
-                (*received_message).calculate_delay_now();
-                return true;
-            }
+            (*received_message).calculate_delay_now();
+            return true;
         }
-        else { 
-            return false;
-        }
-   /* }
-    catch (const std::exception& e) {
+    }
+    else {
+        return false;
+    }
+    /* }
+     catch (const std::exception& e) {
 
-        std::cerr << "Error in communication: " << e.what() << std::endl;
-    }*/
-}
+         std::cerr << "Error in communication: " << e.what() << std::endl;
+     }*/
+};
 
 void ChatClient::writing_messages(boost::asio::ip::tcp::socket& socket, const std::string& message, const std::string& from)
 {
@@ -119,6 +107,8 @@ void ChatClient::writing_messages(boost::asio::ip::tcp::socket& socket, const st
     BaseClientServer::send_message(socket, make_shared<MessageLengthPrefixed>(messagelp));
     if (!messagelp.get_message().empty())
     {
+
+
         //std::cout << "Message for sending: " << messagelp.get_message() << std::endl;
     }
 
@@ -170,7 +160,7 @@ void ChatClient::connect() {
  
     }
     catch (const std::exception& e) {
-        std::cerr << name_ << " Connected Failed. " << e.what() << std::endl;
+        std::cerr << name_ << " Connected Failed. ";// << e.what() << std::endl;
         return;  // Handle error appropriately
     }
 };
