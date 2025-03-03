@@ -38,7 +38,10 @@ void ChatServer::broadcast_message(std::shared_ptr<MessageLengthPrefixed> messag
 
             // Send the message
             BaseClientServer::send_message(*client, messagelp);
-            std::cout << "Message sent: " << (*messagelp).get_message() << std::endl;
+            if (!(*messagelp).get_message().empty())
+            {
+                std::cout << "Message for sending: " << (*messagelp).get_message() << std::endl;
+            }     
         }
     }
 }
@@ -51,7 +54,8 @@ bool  ChatServer::reading_messages(std::shared_ptr<boost::asio::ip::tcp::socket>
 
         // if (!(*received_message).get_message().empty()) {
         const std::string message = (*received_message).get_message();
-        std::cout << "Received message from " << (*received_message).get_client_name() << ": "
+        //std::cout << "Received message from ";
+        std::cout <<"   " << (*received_message).get_client_name() << ": "
             << (*received_message).get_message() << std::endl;
         /*TODO: remove connection*/
         if (message == "exit")
@@ -82,8 +86,11 @@ void ChatServer::writing_messages(boost::asio::ip::tcp::socket& socket_receiver,
 
     // Send the message
     BaseClientServer::send_message(socket_receiver, make_shared<MessageLengthPrefixed>(messagelp));
-    std::cout << "Message sent: " << messagelp.get_message() << std::endl;
 
+    if (!messagelp.get_message().empty())
+    {  
+        std::cout << "sending: " << messagelp.get_message() << std::endl;    
+    }
 }
 
 /*

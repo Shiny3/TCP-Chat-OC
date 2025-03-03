@@ -5,6 +5,8 @@
 #include <chrono>
 #include <iomanip>
 #include <sstream>
+#include <ctime> 
+#include <iomanip> // For std::put_time
 //#include <openssl/md5.h>  // For checksum
 
 // Message class with the required fields
@@ -106,6 +108,48 @@ public:
     //const std::vector<unsigned char>& get_datasum() const { return datasum_; }
     const std::chrono::system_clock::time_point& get_timestamp() const { return timestamp_; }
 
+    /*void print_timestamp() const {
+        auto time_t_timestamp = std::chrono::system_clock::to_time_t(timestamp_);
+        std::cout << "Timestamp: " << std::put_time(std::localtime(&time_t_timestamp), "%Y-%m-%d %H:%M:%S") << std::endl;
+    }*/
 
+    void print_timestamp() const {
 
+        MessageLengthPrefixed::print_timestamp(timestamp_);
+    }
+
+    static std::tm print_time_now() {
+
+      return  MessageLengthPrefixed::print_timestamp(std::chrono::system_clock::now());    
+        //return std::tm;
+    }
+
+    static std::tm print_timestamp(std::chrono::system_clock::time_point timestamp) {
+
+        auto time_t_timestamp = std::chrono::system_clock::to_time_t(timestamp);
+        std::tm tm_timestamp;
+        localtime_s(&tm_timestamp, &time_t_timestamp);
+       // std::cout << "Timestamp: " << std::put_time(&tm_timestamp, "%Y-%m-%d %H:%M:%S %ms") << std::endl;
+
+        // Calculate milliseconds
+        auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(timestamp.time_since_epoch()) % 1000;
+
+        //std::cout << "Timestamp: ";
+        std::cout << std::put_time(&tm_timestamp, "%Y-%m-%d %H:%M:%S")
+            << '.' << std::setw(3) << std::setfill('0') << milliseconds.count();
+          //  << std::endl;
+
+        return tm_timestamp;
+    }
+
+    void calculate_delay_now() {
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - timestamp_);
+        std::cout << "  Delay: " << duration.count() << " milliseconds" << std::endl;
+    };
+
+    static void calculate_delay(const std::chrono::system_clock::time_point& start,
+        const std::chrono::system_clock::time_point& end) {
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+        std::cout << "Delay: " << duration.count() << " milliseconds" << std::endl;
+    };
 };

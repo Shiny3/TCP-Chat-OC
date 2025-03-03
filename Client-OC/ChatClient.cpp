@@ -77,8 +77,21 @@ bool  ChatClient::reading_messages(std::shared_ptr<boost::asio::ip::tcp::socket>
 
             if (message.length() > 0) {
 
-                std::cout << "Received message from " << (*received_message).get_client_name() << ": "
+                //std::cout << "Sent At:  ";
+                (*received_message).print_timestamp();// << std::endl;
+
+               // std::cout << "Received message from " << (*received_message).get_client_name() << ": "
+               //     << (*received_message).get_message() << std::endl;
+
+                const std::string message = (*received_message).get_message();
+                //std::cout << "Received message from ";
+                std::cout << "   " << (*received_message).get_client_name() << ": "
                     << (*received_message).get_message() << std::endl;
+
+                //std::cout << " At:  ";
+                //MessageLengthPrefixed::print_time_now();
+
+                (*received_message).calculate_delay_now();
                 return true;
             }
         }
@@ -97,7 +110,10 @@ void ChatClient::writing_messages(boost::asio::ip::tcp::socket& socket, const st
 
     // Send the message
     BaseClientServer::send_message(socket, make_shared<MessageLengthPrefixed>(messagelp));
-    std::cout << "Message sent: " << messagelp.get_message() << std::endl;
+    if (!messagelp.get_message().empty())
+    {
+        //std::cout << "Message for sending: " << messagelp.get_message() << std::endl;
+    }
 
 }
 
