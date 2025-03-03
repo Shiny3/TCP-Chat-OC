@@ -10,7 +10,36 @@
 // Message class with the required fields
 class MessageLengthPrefixed {
 
+private:
+    std::string client_name_;
+    std::string message_;
+    size_t size_;
+    std::chrono::system_clock::time_point timestamp_;
+    /*std::vector<unsigned char> datasum_;
+
+   // Calculate checksum using MD5 (for simplicity, using OpenSSL here)
+   static std::vector<unsigned char> calculate_checksum(const std::string& data) {
+       unsigned char md5_result[MD5_DIGEST_LENGTH];
+       MD5_CTX md5_ctx;
+       MD5_Init(&md5_ctx);
+       MD5_Update(&md5_ctx, data.data(), data.size());
+       MD5_Final(md5_result, &md5_ctx);
+
+       return std::vector<unsigned char>(md5_result, md5_result + MD5_DIGEST_LENGTH);
+   }*/
+
+
 public:
+
+    ~MessageLengthPrefixed() {
+   
+
+        // Cleanup code (if any) goes here
+        // Since std::string and std::chrono::system_clock::time_point handle their own cleanup,
+        // there may not be a need for explicit cleanup code here.
+        // 
+        //std::cout << "MessageLengthPrefixed object for " << client_name_ << " destroyed." << std::endl;
+    }
 
     MessageLengthPrefixed(const std::string& client_name, const std::string& message)
         : client_name_(client_name), message_(message) {
@@ -43,8 +72,10 @@ public:
         return data;
     }
 
+    
     // Deserialize message from bytes received
-    static MessageLengthPrefixed from_bytes(const std::vector<uint8_t>& bytes) {
+    static  std::shared_ptr<MessageLengthPrefixed> from_bytes(const std::vector<uint8_t>& bytes) {
+
         std::string client_name;
         size_t index = 0;
 
@@ -64,8 +95,9 @@ public:
 
         // Read checksum (16 bytes, MD5 hash length)
         std::vector<unsigned char> datasum(bytes.begin() + index, bytes.end());
+        //MessageLengthPrefixed messagelp =  MessageLengthPrefixed(client_name, message);
+        return std::make_shared<MessageLengthPrefixed>(MessageLengthPrefixed(client_name, message));
 
-        return MessageLengthPrefixed(client_name, message);
     }
 
     const std::string& get_client_name() const { return client_name_; }
@@ -73,24 +105,6 @@ public:
     size_t get_size() const { return size_; }
     //const std::vector<unsigned char>& get_datasum() const { return datasum_; }
     const std::chrono::system_clock::time_point& get_timestamp() const { return timestamp_; }
-
-private:
-    std::string client_name_;
-    std::string message_;
-    size_t size_;
-    std::chrono::system_clock::time_point timestamp_;
-     /*std::vector<unsigned char> datasum_;
-   
-    // Calculate checksum using MD5 (for simplicity, using OpenSSL here)
-    static std::vector<unsigned char> calculate_checksum(const std::string& data) {
-        unsigned char md5_result[MD5_DIGEST_LENGTH];
-        MD5_CTX md5_ctx;
-        MD5_Init(&md5_ctx);
-        MD5_Update(&md5_ctx, data.data(), data.size());
-        MD5_Final(md5_result, &md5_ctx);
-
-        return std::vector<unsigned char>(md5_result, md5_result + MD5_DIGEST_LENGTH);
-    }*/
 
 
 

@@ -6,7 +6,7 @@ set client_exe=Client-OC.exe
 
 set CLIENT_FULL_PATH=%ROOT_DIR%\%client_exe%
 
-echo  "%CLIENT_FULL_PATH%" shown successfully.
+REM echo  "%CLIENT_FULL_PATH%" shown successfully.
 
 set name=client
 set host=127.0.0.1

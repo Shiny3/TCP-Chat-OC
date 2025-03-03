@@ -32,9 +32,6 @@ class ChatClient : BaseClientServer
 
     bool is_running_;
 
-    void close_window();
-
- 
     void stop();
 
     void run();

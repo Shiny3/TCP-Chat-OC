@@ -7,6 +7,12 @@
 
 #include <thread>
 
+
+
+#include <iostream>
+#include <windows.h>
+
+ 
 int main(int argc, char* argv[]) {
 
     std::string IPAddress;
@@ -18,7 +24,7 @@ int main(int argc, char* argv[]) {
         name = std::string(argv[1]);
         IPAddress = std::string(argv[2]);
         port = std::string(argv[3]);
-        
+
     }
     catch (...) {
         std::cout << "Incorrect Format" << std::endl;
@@ -30,20 +36,20 @@ int main(int argc, char* argv[]) {
         // Set up Boost.Asio io_context and thread pool
         boost::asio::io_context io_context;
 
-        auto client_handler = std::make_shared<ChatClient>(name,io_context, IPAddress, port);
+        auto client_handler = std::make_shared<ChatClient>(name, io_context, IPAddress, port);
         client_handler->start();
 
-       // Accept incoming connections and handle each client with a ClientHandler
-        while (true) {
-          // Start sending messages
-          client_handler->send_messages();
-          client_handler->join();
+        // Accept incoming connections and handle each client with a ClientHandler
+        while (client_handler->send_messages()) {
+            // Start sending messages
+           
+            client_handler->join();
         }
-        io_context.stop(); 
+        io_context.stop();
     }
     catch (const std::exception& e) {
         std::cerr << "Server error: " << e.what() << std::endl;
-    }
+    };
 
     return 0;
 };

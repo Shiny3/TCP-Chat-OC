@@ -6,7 +6,7 @@
 #include <boost/asio.hpp>
 #include "ChatServer.h"
 #include <Cypher.h>
-
+#include "ChatServer.h"
 using boost::asio::ip::tcp;
 
 /**/
@@ -28,7 +28,7 @@ TODO:
 Broadcast message to the rest clients.
 */
 
-void ChatServer::broadcast_message(MessageLengthPrefixed& messagelp, std::shared_ptr<tcp::socket> sender_socket) {
+void ChatServer::broadcast_message(std::shared_ptr<MessageLengthPrefixed> messagelp, std::shared_ptr<tcp::socket> sender_socket) {
 
     std::lock_guard<std::mutex> lock(clients_mutex);
 
@@ -38,43 +38,34 @@ void ChatServer::broadcast_message(MessageLengthPrefixed& messagelp, std::shared
 
             // Send the message
             BaseClientServer::send_message(*client, messagelp);
-            std::cout << "Message sent: " << messagelp.get_message() << std::endl;
+            std::cout << "Message sent: " << (*messagelp).get_message() << std::endl;
         }
     }
 }
 
 bool  ChatServer::reading_messages(std::shared_ptr<boost::asio::ip::tcp::socket>  client_socket) {
 
-    //std::string message1;
-    //message1 = BaseClientServer::receive_message1(*client_socket);
-
-
-    /* MessageLP lp_message = read_message(*socket_);
-
-    std::cout << "Received from server: " << lp_message.to_string() << std::endl; */
-
     // Receive the message
-    MessageLengthPrefixed received_message = receive_message(*client_socket);
-    if (&received_message != nullptr) {
+    std::shared_ptr <MessageLengthPrefixed> received_message = receive_message(*client_socket);
+    if ((received_message) != nullptr) {
 
-        const std::string message = received_message.get_message();
-
-        if (message.length() > 0) {
-
-            std::cout << "Received message from " << received_message.get_client_name() << ": "
-                << received_message.get_message() << std::endl;
-            /*TODO: remove connection*/
-            if (message == "exit")
-            {
-                return false;
-            }
- 
-            // Broadcast message to all clients except the sender
-            ChatServer::broadcast_message(received_message, client_socket);
+        // if (!(*received_message).get_message().empty()) {
+        const std::string message = (*received_message).get_message();
+        std::cout << "Received message from " << (*received_message).get_client_name() << ": "
+            << (*received_message).get_message() << std::endl;
+        /*TODO: remove connection*/
+        if (message == "exit")
+        {
+            // close_window();
+            return false;
         }
+
+        // Broadcast message to all clients except the sender
+        ChatServer::broadcast_message(received_message, client_socket);
+        //}
         return true;
     }
-}
+};
 
 // Use write for blocking writes where you want to ensure that all data is written before proceeding.
 //size_t bytes_written1 = boost::asio::write(socket_, boost::asio::buffer(message + " #"));
@@ -85,21 +76,12 @@ bool  ChatServer::reading_messages(std::shared_ptr<boost::asio::ip::tcp::socket>
 
 void ChatServer::writing_messages(boost::asio::ip::tcp::socket& socket_receiver, const std::string& message, const std::string& from)
 {
-    BaseClientServer::send_message1(socket_receiver, message);
-
-    /*// Create a sample message to send
-     MessageLP *lp_message = new MessageLP(message, name_);
-    // Send the message to the server
-   BaseClientServer::write_message(*socket_, *lp_message);
-
-    std::cout << "Message sent to the server." << std::endl;
-*/
 
 // Create a message
     MessageLengthPrefixed messagelp(port_, message);
 
     // Send the message
-    BaseClientServer::send_message(socket_receiver, messagelp);
+    BaseClientServer::send_message(socket_receiver, make_shared<MessageLengthPrefixed>(messagelp));
     std::cout << "Message sent: " << messagelp.get_message() << std::endl;
 
 }
@@ -109,16 +91,13 @@ Handle client - reading the messages from a accepted client.
 */
 void ChatServer::handle_client(std::shared_ptr<tcp::socket> client_socket) {
 
-    try {
-
-        while (true) {
-
-            reading_messages(client_socket);
-        }
-    }
+     try {
+       ///*while exit is not pressed or closing the window*/
+        while (reading_messages(client_socket));
+     }
     catch (std::exception& e) {
 
-        std::cerr << "Client Disconnected with error: " << e.what() << std::endl;
+        //std::cerr << "Client Disconnected with error: " << e.what() << std::endl;
     }
 
     // Remove client from the list when they disconnect
@@ -243,7 +222,6 @@ void ChatServer::handle_accept(std::shared_ptr<tcp::socket> client_socket, const
         thread_pool_.submit(
             [this, client_socket]() {
                 try {
-                    init = false;
                     handle_client(client_socket);
                 }
                 catch (const std::exception& e) {

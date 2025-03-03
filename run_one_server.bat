@@ -6,7 +6,7 @@ set server_exe=Server-OC.exe
 
 set SERVER_FULL_PATH=%ROOT_DIR%\%server_exe%
 
-echo  "%SERVER_FULL_PATH%" shown successfully.
+REM echo  "%SERVER_FULL_PATH%" shown successfully.
 
 set name=server...
 set host=127.0.0.1

@@ -44,15 +44,13 @@ private:
 
 	std::vector<std::shared_ptr<boost::asio::ip::tcp::socket>> clients_;
 
-	bool init = false;
-
 public:
 
 	ChatServer(boost::asio::io_context& io_context, const std::string& port, size_t thread_pool_size);
 
 	ThreadPool777 thread_pool_;
 
-	void broadcast_message(MessageLengthPrefixed& messagelp, std::shared_ptr<tcp::socket> sender_socket);
+	void broadcast_message(std::shared_ptr <MessageLengthPrefixed> messagelp, std::shared_ptr<tcp::socket> sender_socket);
 
 	void writing_messages(boost::asio::ip::tcp::socket& socket, const std::string& message, const std::string& from) override;
 
