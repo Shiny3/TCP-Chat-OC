@@ -63,7 +63,7 @@ bool  ChatServer::reading_messages(std::shared_ptr<boost::asio::ip::tcp::socket>
             const std::string client = (*received_message).get_client_name();
             MessageLengthPrefixed messagelp = MessageLengthPrefixed(client, "has left the room.");
             ChatServer::broadcast_message(std::make_shared<MessageLengthPrefixed>(messagelp), client_socket);  
-            std::cout << client + " has Left the Room." << std::endl;
+            //std::cout << client + " has Left the Room." << std::endl;
             return false;
         }
 

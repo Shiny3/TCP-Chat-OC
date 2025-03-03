@@ -46,6 +46,18 @@ class ChatClient : BaseClientServer
 
     bool reading_messages(std::shared_ptr<boost::asio::ip::tcp::socket>  socket) override;
 
+    /* Checking For a Signal of Closing the Connsole By Ctrl+C or X right top corner */
+    static BOOL WINAPI ConsoleHandler(DWORD signal) {
+        if (signal == CTRL_CLOSE_EVENT) {
+            std::cerr << "Console window is closing. Performing cleanup..." << std::endl;
+            // Perform any cleanup or resource release here
+            // ...
+            
+            return TRUE;
+        }
+        return FALSE;
+    };
+
 public:
 
     ChatClient(const std::string& name, boost::asio::io_context& io_context, const std::string& host, const std::string& port);

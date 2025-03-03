@@ -51,15 +51,5 @@ protected:
         }
     };
 
-    /* Checking For a Signal of Closing the Connsole By Ctrl+C or X right top corner */
-   static BOOL WINAPI ConsoleHandler(DWORD signal) {
-        if (signal == CTRL_CLOSE_EVENT) {
-            std::cerr << "Console window is closing. Performing cleanup..." << std::endl;
-            // Perform any cleanup or resource release here
-            // ...
-            return TRUE;
-        }
-        return FALSE;
-    };
 
 };

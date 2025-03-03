@@ -18,17 +18,19 @@ bool ChatClient::send_messages() {
 
         while (is_running_) {
 
+            // Register the console handler using the address-of operator '&'
+            if (!SetConsoleCtrlHandler(&ConsoleHandler, TRUE)) {
+                std::cerr << "Error: Could not set control handler" << std::endl;
+               // ClosingConnection();
+
+                break;
+            }
+
+
             //  cl_message->readMultiFromConsole('#');
             cl_message->readSingleFromConsole();
             message = cl_message->getContent();
 
-            // Register the console handler using the address-of operator '&'
-            if (!SetConsoleCtrlHandler(&BaseClientServer::ConsoleHandler, TRUE)) {
-                std::cerr << "Error: Could not set control handler" << std::endl;
-               // ClosingConnection();
-                writing_messages(*socket_, "exit", name_);
-                break;
-            }
 
             writing_messages(*socket_, message, name_); 
 
@@ -124,6 +126,7 @@ void ChatClient::writing_messages(boost::asio::ip::tcp::socket& socket, const st
 
 void ChatClient::ClosingConnection() {
 
+    writing_messages(*socket_, "exit", name_);
     is_running_ = false;
    (*socket_).close();
 }
