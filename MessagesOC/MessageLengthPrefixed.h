@@ -8,9 +8,10 @@
 #include <ctime> 
 #include <iomanip> // For std::put_time
 //#include <openssl/md5.h>  // For checksum
-
+// Define the alignment size (e.g., align to 8 bytes for improved performance)
+constexpr size_t alignment = 64; 
 // Message class with the required fields
-class MessageLengthPrefixed {
+class alignas(alignment)  MessageLengthPrefixed {
 
 private:
     std::string client_name_;
@@ -80,7 +81,7 @@ public:
 
             // Read client name
             while (bytes[index] != '\0') {
-                client_name += bytes[index++];
+                client_name.append(1, bytes[index++]);
             }
             index++;  // Skip the null terminator
 

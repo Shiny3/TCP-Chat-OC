@@ -14,6 +14,10 @@
 
 // Initialize the static member
 //std::shared_ptr<ConsoleHandler> ConsoleHandler::instance = nullptr;
+#include "ConsoleHandler.h"  // Include the appropriate header
+
+// Define the static member variable outside the class
+ConsoleHandler* ConsoleHandler::instance_ = nullptr;
 
 
 int main(int argc, char* argv[]) {
@@ -39,18 +43,31 @@ int main(int argc, char* argv[]) {
         // Set up Boost.Asio io_context and thread pool
         boost::asio::io_context io_context;
 
+        std::cout << "Press Ctrl+C to close the connection..." << std::endl;
+
         auto client_handler = std::make_shared<ChatClient>(name, io_context, IPAddress, port);
         client_handler->start();
 
-        /*auto handler = std::make_shared<ConsoleHandler>();
-        ConsoleHandler::setInstance(handler);*/
+        // Pass the ChatClient's ClosingConnection method to ConsoleHandler
+        ConsoleHandler console_handler([&client_handler]() {
+
+            std::thread t1([&]() {
+                client_handler->ClosingConnection();
+                });
+
+            t1.join();
+
+              // Call ClosingConnection when Ctrl+C is pressed
+            });
+
+        // Set the instance of ConsoleHandler for static access
+        ConsoleHandler::setInstance(&console_handler);
 
         // Accept incoming connections and handle each client with a ClientHandler
         while (client_handler->send_messages()) {
             // Start sending messages
-           
-            client_handler->join();
-        }
+        } 
+        client_handler->join();  
         io_context.stop();
     }
     catch (const std::exception& e) {

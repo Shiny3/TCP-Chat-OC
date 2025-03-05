@@ -12,12 +12,13 @@
 #include <BaseClientServer.h>
 #include "../MessagesOC/MessageLengthPrefixed.h"
 #include <ConsoleHandler.h>
+#include "../MessagesOC/MessagesTypes.h"
 
 using boost::asio::ip::tcp;
 
 class ChatClient : BaseClientServer
 {
-    ConsoleHandler handler;
+    //ConsoleHandler handler;
 
     boost::asio::io_context& io_context_;  
 
@@ -33,9 +34,9 @@ class ChatClient : BaseClientServer
 
     std::string name_;
 
-    bool  is_running_= false;
+    std::atomic<bool> is_running_= false;
 
-  
+   // std::mutex mtx_; // Mutex to protect shared resources
 
     void run();
 
@@ -49,23 +50,6 @@ class ChatClient : BaseClientServer
 
     bool reading_messages(std::shared_ptr<boost::asio::ip::tcp::socket>  socket) override;
 
-    /* Checking For a Signal of Closing the Connsole By Ctrl+C or X right top corner 
-    static BOOL WINAPI ConsoleHandler(DWORD signal) {
-        if (signal == CTRL_CLOSE_EVENT) {
-            std::cout << "Console window closed!" << std::endl;
-            // Perform cleanup before the application exits
-            // Return TRUE to indicate that you handled the event
-           // is_running_ = false;
-            return TRUE;
-        }
-        else if (signal == CTRL_C_EVENT) {
-            std::cout << "Ctrl+C pressed!" << std::endl;
-           // is_running_ = false;
-            return TRUE;
-        }
-        return FALSE; // Let the system handle other signals normally
-    };*/
-
 public:
 
     void ClosingConnection();
@@ -73,6 +57,8 @@ public:
     ChatClient(const std::string& name, boost::asio::io_context& io_context, const std::string& host, const std::string& port);
 
     std::shared_ptr<std::thread> communication_thread;
+
+    std::shared_ptr<std::thread> communication_thread_writing;
 
     /*loop function for sending*/
     bool send_messages();

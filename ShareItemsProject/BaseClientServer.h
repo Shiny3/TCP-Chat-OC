@@ -23,7 +23,8 @@ class BaseClientServer
 
 protected:
 
-    virtual ~BaseClientServer() {};
+  // virtual 
+        ~BaseClientServer() {};
 
     /*Sending a Message with Lengh Prefixed Information with Extra information About the Sender*/
     void send_message(boost::asio::ip::tcp::socket& socket, std::shared_ptr<MessageLengthPrefixed> message);
@@ -50,6 +51,5 @@ protected:
             PostMessage(hwnd, WM_CLOSE, 0, 0); // Post a WM_CLOSE message to the console window
         }
     };
-
-
+ 
 };

@@ -8,7 +8,7 @@ set CLIENT_FULL_PATH=%ROOT_DIR%\%client_exe%
 
 REM echo  "%CLIENT_FULL_PATH%" shown successfully.
 
-set name=Shiny
+set name=Sunshine
 set host=127.0.0.1
 set port=12345
 

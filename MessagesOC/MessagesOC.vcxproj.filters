@@ -30,6 +30,9 @@
     <ClInclude Include="MessageLengthPrefixed.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MessagesTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Message.cpp">
@@ -45,6 +48,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MessageLengthPrefixed.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MessagesTypes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

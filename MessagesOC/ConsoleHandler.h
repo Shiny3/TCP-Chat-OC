@@ -1,28 +1,49 @@
+#pragma once
 #include <iostream>
 #include <Windows.h>
 #include <memory>
-
+#include "ChatClient.h"
 class ConsoleHandler {
-/*public:
 
-    std::shared_ptr<ChatClient> clientInstance;
 
-    ConsoleHandler(ChatClient client) : clientInstance(std::make_shared<ChatClient>(client)){
-       
-        if (!SetConsoleCtrlHandler(ConsoleHandler::handlerWrapper, TRUE)) {
-            std::cerr << "Failed to set console control handler!" << std::endl;
+private:
+
+    // Static wrapper function that forwards the signal to the non-static method
+    static BOOL WINAPI handlerWrapper(DWORD signal) {
+        if (instance_) {
+            return instance_->consoleHandler(signal);
         }
-        else {
-            std::cout << "Console control handler set!" << std::endl;
-        }
+        return FALSE;
+    }
+public:
+
+    static ConsoleHandler* instance_;
+
+    std::function<void()> closing_connection_;  // Function to call when Ctrl+C is pressed
+
+    // Constructor accepts a pointer to the ClosingConnection method of ChatClient
+    ConsoleHandler(std::function<void()> closingConnectionFn) : closing_connection_(closingConnectionFn) {
+   
+        signal(SIGINT, &ConsoleHandler::HandleSignal);
     }
 
+    // Static signal handler function
+    static void HandleSignal(int signal) {
+
+        if (signal == SIGINT) {
+            std::cout << "\nCtrl+C detected. Closing connection..." << std::endl;
+            // Call the provided closing connection function
+            if (instance_) {
+                instance_->closing_connection_();
+            }
+        }
+    }
     BOOL consoleHandler(DWORD signal) {
 
         if (signal == CTRL_CLOSE_EVENT || signal == CTRL_C_EVENT) {
             std::cerr << "Console window is closing or Ctrl+C pressed. Performing cleanup..." << std::endl;
-            if (clientInstance) {
-               // (*clientInstance)->ClosingConnection();
+            if (instance_) {
+                instance_->closing_connection_();
             }
             return TRUE;
         }
@@ -40,19 +61,9 @@ class ConsoleHandler {
     }
 
     // Static method to access instance
-    static void setInstance(std::shared_ptr<ConsoleHandler> handler) {
-        instance = handler;
+    static void setInstance(ConsoleHandler* handler) {
+        instance_ = handler;
     }
 
- 
-private:
-    static std::shared_ptr<ConsoleHandler> instance;
 
-    // Static wrapper function that forwards the signal to the non-static method
-    static BOOL WINAPI handlerWrapper(DWORD signal) {
-        if (instance) {
-            return instance->consoleHandler(signal);
-        }
-        return FALSE;
-    }*/
 };

@@ -2,7 +2,7 @@
 #ifndef CHATSERVER_H
 #define CHATSERVER_H
 
-
+#include <unordered_map>
 #include <iostream>
 #include <thread>
 #include <vector>
@@ -12,6 +12,7 @@
 #include "../ShareItemsProject/ThreadPool.h"
 #include <BaseClientServer.h>
 #include "../MessagesOC/MessageLengthPrefixed.h"
+#include "../MessagesOC/MessagesTypes.h"
 
 using boost::asio::ip::tcp;
 
@@ -24,7 +25,7 @@ private:
 
 	void handle_accept(std::shared_ptr<tcp::socket> client_socket, const boost::system::error_code& error);
 
-	void remove_client(std::shared_ptr<tcp::socket>);
+	const std::string remove_client(std::shared_ptr<tcp::socket>);
 
 	void start_accept_async();
 
@@ -44,6 +45,7 @@ private:
 
 	std::vector<std::shared_ptr<boost::asio::ip::tcp::socket>> clients_;
 
+	std::unordered_map<std::shared_ptr<boost::asio::ip::tcp::socket>,std::string> clients__;
 public:
 
 	ChatServer(boost::asio::io_context& io_context, const std::string& port, size_t thread_pool_size);

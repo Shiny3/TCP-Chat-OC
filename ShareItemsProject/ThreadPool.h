@@ -10,6 +10,13 @@
 #include <functional>
 #include <mutex>
 #include <deque>
+#include <boost/asio.hpp>
+#include <iostream>
+#include <thread>
+#include <vector>
+#include <memory>
+#include <functional>
+#include <deque>
 
 using boost::asio::ip::tcp;
 using namespace std;

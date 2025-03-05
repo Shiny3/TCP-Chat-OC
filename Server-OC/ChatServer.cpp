@@ -30,9 +30,9 @@ Broadcast message to the rest clients.
 
 void ChatServer::broadcast_message(std::shared_ptr<MessageLengthPrefixed> messagelp, std::shared_ptr<tcp::socket> sender_socket) {
 
-    std::lock_guard<std::mutex> lock(clients_mutex);
+   std::lock_guard<std::mutex> lock(clients_mutex);
 
-    for (auto& client : clients_) {
+    for (std::shared_ptr<tcp::socket> client : clients_) {
 
         if (client != sender_socket) {
 
@@ -50,7 +50,7 @@ bool  ChatServer::reading_messages(std::shared_ptr<boost::asio::ip::tcp::socket>
 
     // Receive the message
     std::shared_ptr <MessageLengthPrefixed> received_message = receive_message(*client_socket);
-    if ((received_message) != nullptr) {
+    //if ((received_message) == nullptr) {};
 
         // if (!(*received_message).get_message().empty()) {
         const std::string message = (*received_message).get_message();
@@ -58,21 +58,18 @@ bool  ChatServer::reading_messages(std::shared_ptr<boost::asio::ip::tcp::socket>
         std::cout <<"   " << (*received_message).get_client_name() << ": "
             << (*received_message).get_message() << std::endl;
 
-        if (message == "exit")
-        {
-            std::lock_guard<std::mutex> lock(clients_mutex);
-            const std::string client = (*received_message).get_client_name();
-            MessageLengthPrefixed messagelp = MessageLengthPrefixed(client, "has left the room.");
-            ChatServer::broadcast_message(std::make_shared<MessageLengthPrefixed>(messagelp), client_socket);  
-            //std::cout << client + " has Left the Room." << std::endl;
-            return false;
+         if (Messages::compareMessageType(Messages::MessageType::CONNECT, message)) {
+                   
+               // std::lock_guard<std::mutex> lock(clients_mutex);
+               // clients_.push_back(client_socket);
+                clients__.emplace(client_socket, (*received_message).get_client_name()); 
         }
-
+ 
         // Broadcast message to all clients except the sender
         ChatServer::broadcast_message(received_message, client_socket);
         //}
         return true;
-    }
+  //  }
 };
 
 // Use write for blocking writes where you want to ensure that all data is written before proceeding.
@@ -111,30 +108,38 @@ void ChatServer::handle_client(std::shared_ptr<tcp::socket> client_socket) {
         //std::cerr << "Client Disconnected with error: " << e.what() << std::endl;
     }
 
+    std::cout << clients__[client_socket];
     // Remove client from the list when they disconnect
     {
-        remove_client(client_socket);
+        std::string left_client = remove_client(client_socket);
+        MessageLengthPrefixed messagelp = MessageLengthPrefixed(left_client, "has left the room.");
+        ChatServer::broadcast_message(std::make_shared<MessageLengthPrefixed>(messagelp), nullptr);
     }
-    std::cout << "Client has Left the Room." << std::endl;
 }
 
-
+ 
 /*
 Remove client when is disconnected.
 */
-void ChatServer::remove_client(std::shared_ptr<tcp::socket> client_socket) {
+const std::string ChatServer::remove_client(std::shared_ptr<tcp::socket> client_socket) {
     /*
     std::remove does not actually remove elements from the container; instead, it reorders the elements in the range such that
     the elements to be removed are moved to the end of the range.
     */
     //std::cout << "Client Disconnected." << std::endl;
-
+    std::string left_client;
     std::lock_guard<std::mutex> lock(clients_mutex);
     auto it = std::find(clients_.begin(), clients_.end(), client_socket);
 
     if (it != clients_.end()) {
+
+        left_client = clients__[client_socket];
+        std::cout << left_client << " has Left the Room." << std::endl;
+
         clients_.erase(it);
+
     }
+    return left_client;
 };
 
 /*
@@ -218,11 +223,11 @@ void ChatServer::handle_accept(std::shared_ptr<tcp::socket> client_socket, const
 
     if (!error) {
 
-        // Add the new client to the list
+     /**/ // Add the new client to the list
         {
             std::lock_guard<std::mutex> lock(clients_mutex);
             clients_.push_back(client_socket);
-        }
+        }  
 
         /*thread pool adding the new connected client*/
         thread_pool_.submit(
@@ -240,7 +245,6 @@ void ChatServer::handle_accept(std::shared_ptr<tcp::socket> client_socket, const
                 }
             }
         );
-
     }
     else {
         std::cerr << "Connection Failed: " << error.message() << std::endl;

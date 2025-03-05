@@ -142,6 +142,7 @@
     <ClInclude Include="ClientMessage.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="MessageLengthPrefixed.h" />
+    <ClInclude Include="MessagesTypes.h" />
     <ClInclude Include="ServerMessage.h" />
   </ItemGroup>
   <ItemGroup>
@@ -149,6 +150,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Message.cpp" />
     <ClCompile Include="MessageLengthPrefixed.cpp" />
+    <ClCompile Include="MessagesTypes.cpp" />
     <ClCompile Include="ServerMessage.cpp" />
   </ItemGroup>
   <ItemGroup>

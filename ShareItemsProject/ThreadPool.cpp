@@ -4,14 +4,7 @@
 #pragma once
 
 /* ThreadPool Class(Manages worker threads)*/
-#include <boost/asio.hpp>
-#include <iostream>
-#include <thread>
-#include <vector>
-#include <memory>
-#include <functional>
-#include <mutex>
-#include <deque>
+
 
 using boost::asio::ip::tcp;
 using namespace std;
